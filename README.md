@@ -1,2 +1,0 @@
-# pruemvcFrameWork
-pruemvc
