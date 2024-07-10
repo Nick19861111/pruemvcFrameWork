@@ -1,4 +1,4 @@
-import DataProxy from "./DataProxy"
+import DataProxy from "../model/DataProxy"
 
 /**
  * 控制层

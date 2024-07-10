@@ -1,6 +1,7 @@
-import MyData from "./MyData"
+import MyData from "../model/MyData"
 export default class DataMediator extends puremvc.Mediator {
     public mediatorName = "DataMediator";
+    
     private text: cc.Label;
     private btn : cc.Button;
 
@@ -14,6 +15,7 @@ export default class DataMediator extends puremvc.Mediator {
     }
 
     clickCallBack() {
+        console.log("点击了按钮了啊");
         this.sendNotification("Reg_StartDataCommand");
     }
 
@@ -31,6 +33,4 @@ export default class DataMediator extends puremvc.Mediator {
             break;
         }
     }
-
-    
 }

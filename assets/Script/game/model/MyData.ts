@@ -5,6 +5,4 @@
  */
 export default class MyData {
     public Level: number = 0;
-    
-    
 }

@@ -1,6 +1,6 @@
-import DataCommand from "./DataCommand"
-import DataMediator from "./DataMediator";
-import DataProxy from "./DataProxy";
+import DataCommand from "../Script/game/ctrl/DataCommand"
+import DataMediator from "../Script/game/view/DataMediator";
+import DataProxy from "./game/model/DataProxy";
 /**
  * pureMVC 框架Demo
  * facade 全局控制类
