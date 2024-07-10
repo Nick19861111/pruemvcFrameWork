@@ -6,6 +6,7 @@ export class GameRoot extends cc.Component {
 
 
     start () {
+        //创建全局的操作
         new ApplicationFacade(this.node); 
     }
 }
