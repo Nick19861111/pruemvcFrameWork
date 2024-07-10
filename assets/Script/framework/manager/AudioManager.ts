@@ -54,7 +54,7 @@ export default class AudioManager extends cc.Component {
         }
         this.stopBgMusic();
         //加载音乐
-        cc.loader.loadRes(url, function (err, clip) {
+        cc.resources.load(url, cc.AudioClip, function (err, clip) {
             if (!!err) {
                 cc.error("startPlayBgMuisc faied" + err);
                 cb(err);
@@ -80,7 +80,7 @@ export default class AudioManager extends cc.Component {
         if (loop !== true) loop = false;
 
         //加载音乐
-        cc.loader.loadRes(url, function (err, clip) {
+        cc.resources.load(url, cc.AudioClip, function (err, clip) {
             if (!!err) {
                 cc.error("playSound failed:" + url);
             }
@@ -101,7 +101,7 @@ export default class AudioManager extends cc.Component {
         }
         else {
             //加载
-            cc.loader.loadRes(this.commonSoundPath, function (err, clip) {
+            cc.resources.load(this.commonSoundPath, cc.AudioClip, function (err, clip) {
                 if (!!err) {
                     cc.error("playCommonClickButton failed");
                 } else {

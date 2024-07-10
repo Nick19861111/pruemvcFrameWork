@@ -21,6 +21,9 @@ export default class MainNodeView extends cc.Component {
     private btn: cc.Button;
 
     protected onLoad(): void {
+        //全局初始化
+        Gloab.init();
+
         this.text = this.node.getChildByName("label").getComponent(cc.Label);
         this.btn = this.node.getChildByName("addNum").getComponent(cc.Button);
 
