@@ -1,23 +1,18 @@
+import Gloab from "../../Gloab";
 import MyData from "../model/MyData"
+import MainNodeView from "./Main/MainNodeView";
 export default class DataMediator extends puremvc.Mediator {
     public mediatorName = "DataMediator";
     
-    private text: cc.Label;
-    private btn : cc.Button;
+    
 
+    private mainNode:MainNodeView = null;
     constructor(root: cc.Node) {
         super();
-        this.text = root.getChildByName("label").getComponent(cc.Label);
-        this.btn  = root.getChildByName("addNum").getComponent(cc.Button);
-
-        this.btn.node.on('click', this.clickCallBack, this);
-        
+        this.mainNode = root.getChildByName("mainNode").getComponent(MainNodeView);
     }
 
-    clickCallBack() {
-        console.log("点击了按钮了啊");
-        this.sendNotification("Reg_StartDataCommand");
-    }
+    
 
     public listNotificationInterests() {
         let list: Array<string> = [];
@@ -29,7 +24,7 @@ export default class DataMediator extends puremvc.Mediator {
         switch(notification.getName()) {
             case "Msg_AddLevel": 
                 let data: MyData = notification.getBody();
-                this.text.string = "" + data.Level;
+                this.mainNode.setLabel(data.Level);
             break;
         }
     }
