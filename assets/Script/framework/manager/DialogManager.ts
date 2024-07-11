@@ -65,6 +65,9 @@ export default class DialogManager {
                         loadedDialogPrefabs[dialogRes] = data;
                         createDialog = cc.instantiate(data);
                         createdDialogs[dialogKey] = createDialog;
+                        let clazz = createDialog.getComponent(dialogType);
+                        console.log(clazz);
+                        
                         createDialog.getComponent(dialogType).dialogParameters = params || {};
                         createDialog.getComponent(dialogType).isDestroy = false;
                         createDialog.parent = this.dialogNode;

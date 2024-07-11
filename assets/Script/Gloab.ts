@@ -21,6 +21,7 @@ export default class Gloab {
     public static init() {
         this.SoundMgr = new AudioManager();
         this.DialogManager = new DialogManager();
+        this.DialogManager.init();
         this.Utils = new utils();
         this.Code = CodeInstance;
     }

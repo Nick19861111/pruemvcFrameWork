@@ -19,17 +19,21 @@ export default class LoadingDialog extends cc.Component {
 
     private isLoadingFinished = false;  //是否完成
 
-    private dialogParameters: any = {};
+    private dialogParameters = null;
 
     private callback: Function = null;
 
     private loadDirArr = null;          //加载文件
 
-    start() {
+    protected onLoad(): void {
         this.isLoadingFinished = false;
 
         this.loadDirArr = this.dialogParameters.loadDirArr || [];
         this.callback = this.dialogParameters.cb;
+    }
+
+    start() {
+
 
         //加载资源
         this.loading();
@@ -58,7 +62,7 @@ export default class LoadingDialog extends cc.Component {
                     allTotalCount += (totalCount - lastTotalCount);
                     allCompletedCount += (completedCount - lastCompletedCount);
                 }
-                if (allTotalCount < 10) allTotalCount = 10;
+                if (allTotalCount < 10) allTotalCount = totalCount;
                 lastTotalCount = totalCount;
                 lastCompletedCount = completedCount;
                 if (totalCount === completedCount) {
@@ -74,7 +78,7 @@ export default class LoadingDialog extends cc.Component {
                     self.loadingGroup.progress = newProgress;
                 }
 
-                if (newProgress * 1.1 >= 1) {
+                if (newProgress >= 1) {
                     self.loadingFinished();
                 }
             },
@@ -92,8 +96,8 @@ export default class LoadingDialog extends cc.Component {
     /**
      * 加载完毕
      */
-    private loadingFinished(){
-        if(this.isLoadingFinished) return;
+    private loadingFinished() {
+        if (this.isLoadingFinished) return;
         this.isLoadingFinished = true;
         this.loadingGroup.progress = 1;
 

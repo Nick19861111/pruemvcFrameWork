@@ -25,10 +25,13 @@
     "_components": [
       {
         "__id__": 12
+      },
+      {
+        "__id__": 13
       }
     ],
     "_prefab": {
-      "__id__": 13
+      "__id__": 14
     },
     "_opacity": 255,
     "_color": {
@@ -453,6 +456,19 @@
     "_isAbsVerticalCenter": true,
     "_originalWidth": 1136,
     "_originalHeight": 640,
+    "_id": ""
+  },
+  {
+    "__type__": "ecb25uRXlhP9by9FuIkGwRz",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 1
+    },
+    "_enabled": true,
+    "loadingGroup": {
+      "__id__": 10
+    },
     "_id": ""
   },
   {

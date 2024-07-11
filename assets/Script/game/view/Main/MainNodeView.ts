@@ -41,7 +41,13 @@ export default class MainNodeView extends cc.Component {
     }
 
     private enterGame(){
-
+        let loadDirArr = [
+            "Common"
+        ];//加载相关操作
+        Gloab.DialogManager.createDialog("UI/Loading/LoadingDialog", {loadDirArr: loadDirArr, cb: function () {
+            console.log("加载资源完成");
+            
+        }.bind(this)});
     }
 
     clickCallBack() {
