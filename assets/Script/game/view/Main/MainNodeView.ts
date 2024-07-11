@@ -21,14 +21,15 @@ export default class MainNodeView extends cc.Component {
     private btn: cc.Button;
 
     protected onLoad(): void {
-        
+
         //初始化设置
         cc.debug.setDisplayStats(true);
-        
+
         //如果是网页版，则降低帧率
-        if(cc.sys.isBrowser) cc.game.setFrameRate(30);
-        
+        if (cc.sys.isBrowser) cc.game.setFrameRate(30);
+
         //全局初始化
+        Gloab.create();
         Gloab.init();
 
         //进入游戏
@@ -40,14 +41,16 @@ export default class MainNodeView extends cc.Component {
         this.btn.node.on('click', this.clickCallBack, this);
     }
 
-    private enterGame(){
+    private enterGame() {
         let loadDirArr = [
             "Common"
         ];//加载相关操作
-        Gloab.DialogManager.createDialog("UI/Loading/LoadingDialog", {loadDirArr: loadDirArr, cb: function () {
-            console.log("加载资源完成");
-            
-        }.bind(this)});
+        Gloab.DialogManager.createDialog("UI/Loading/LoadingDialog", {
+            loadDirArr: loadDirArr, cb: function () {
+                console.log("加载资源完成");
+                Gloab.DialogManager.destroyDialog("UI/Loading/LoadingDialog");
+            }.bind(this)
+        });
     }
 
     clickCallBack() {

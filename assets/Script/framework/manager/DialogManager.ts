@@ -8,7 +8,7 @@ export default class DialogManager {
 
     private createdDialogs = {};
 
-    private dialogNode:cc.Node = null;//弹窗的节点
+    private dialogNode: cc.Node = null;//弹窗的节点
     //初始化
     public init() {
         this.createDialogs = {};
@@ -67,7 +67,7 @@ export default class DialogManager {
                         createdDialogs[dialogKey] = createDialog;
                         let clazz = createDialog.getComponent(dialogType);
                         console.log(clazz);
-                        
+
                         createDialog.getComponent(dialogType).dialogParameters = params || {};
                         createDialog.getComponent(dialogType).isDestroy = false;
                         createDialog.parent = this.dialogNode;
@@ -77,4 +77,90 @@ export default class DialogManager {
             }
         }
     }
+
+    /**
+     * 删除dialog
+     * @param dialogRes 删除的dialog类型
+     * @param isClearPrefabs 是否清除dialog对应的prefab
+     */
+    destroyDialog(dialogRes, isClearPrefabs) {
+        isClearPrefabs = isClearPrefabs || false;
+        let createdDialogs = this.createdDialogs;
+        let dialog = null;
+        let dialogController = null;
+        if (typeof (dialogRes) === 'object') {
+            dialog = dialogRes.node;
+            dialogController = dialogRes;
+
+            for (let key in createdDialogs) {
+                if (createdDialogs.hasOwnProperty(key)) {
+                    if (createdDialogs[key] === dialog) {
+                        dialogRes = key;
+                        break;
+                    }
+                }
+            }
+        } else {
+            dialog = createdDialogs[dialogRes] || null;
+
+            let arr = dialogRes.split('/');
+            let dialogType = arr[arr.length - 1];
+
+            if (dialog) {
+                dialogController = dialog.getComponent(dialogType);
+            }
+        }
+        if (!dialog) {
+            cc.error('destroy dialog not exist:' + dialogRes);
+        }
+        else {
+            let dialogActionWidgetCtrl = dialog.getComponent("DialogActionWidgetCtrl");
+            if (!!dialogActionWidgetCtrl) {
+                dialogActionWidgetCtrl.dialogOut(function () {
+                    // 删除界面
+                    dialog.destroy();
+                    dialogController.isDestroy = true;
+                    // 移除属性
+                    delete createdDialogs[dialogRes];
+                    if (isClearPrefabs) {
+                        cc.loader.releaseRes(dialogRes);
+                        delete this.loadedDialogPrefabs[dialogRes];
+                    }
+                    console.log('destroy dialog succeed', dialogRes);
+                }.bind(this))
+            } else {
+                // 删除界面
+                dialog.destroy();
+                dialogController.isDestroy = true;
+                // 移除属性
+                delete createdDialogs[dialogRes];
+                if (isClearPrefabs) {
+                    cc.loader.releaseRes(dialogRes);
+                    delete this.loadedDialogPrefabs[dialogRes];
+                }
+                console.log('destroy dialog succeed', dialogRes);
+            }
+        }
+    };
+
+    /**
+     * 删除所有
+     * @param exceptArr 
+     */
+    destroyAllDialog(exceptArr) {
+        console.log('destroyAllDialog');
+        for (let key in this.createdDialogs) {
+            if (this.createdDialogs.hasOwnProperty(key)) {
+                if (!!exceptArr && exceptArr.indexOf(key) >= 0) continue;
+                let dialog = this.createdDialogs[key];
+                // 删除界面
+                dialog.destroy();
+                let arr = key.split('/');
+                let dialogType = arr[arr.length - 1];
+                dialog.getComponent(dialogType).isDestroy = true;
+                // 移除属性
+                delete this.createdDialogs[key];
+            }
+        }
+    };
 }

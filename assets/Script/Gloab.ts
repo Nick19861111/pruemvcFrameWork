@@ -13,16 +13,19 @@ export default class Gloab {
     public static DialogManager = null;
     //utils操作
     public static Utils = null;
-    //错误吗
+    //错误码
     public static Code = null;
 
 
     //初始化
-    public static init() {
+    public static create() {
         this.SoundMgr = new AudioManager();
         this.DialogManager = new DialogManager();
-        this.DialogManager.init();
         this.Utils = new utils();
         this.Code = CodeInstance;
+    }
+
+    public static init(){
+        this.DialogManager.init();
     }
 }
