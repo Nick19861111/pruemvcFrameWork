@@ -12,7 +12,7 @@ export default class utils {
      * 是否返回函数
      * @param cb 返回参数
      */
-    public static invokeCallback(cb) {
+    public invokeCallback(cb) {
         //其中！！代表不能为null 和undefine操作
         if (!!cb && typeof cb === 'function') {
             cb.apply(null, Array.prototype.slice.call(arguments, 1));

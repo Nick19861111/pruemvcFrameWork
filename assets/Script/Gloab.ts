@@ -1,5 +1,9 @@
+
+
+import CodeInstance from "./framework/constant/Code";
 import AudioManager from "./framework/manager/AudioManager";
 import DialogManager from "./framework/manager/DialogManager";
+import utils from "./framework/utils/utils";
 
 export default class Gloab {
 
@@ -7,11 +11,17 @@ export default class Gloab {
     public static SoundMgr = null;
     //弹窗的管理
     public static DialogManager = null;
+    //utils操作
+    public static Utils = null;
+    //错误吗
+    public static Code = null;
 
 
     //初始化
     public static init() {
         this.SoundMgr = new AudioManager();
         this.DialogManager = new DialogManager();
+        this.Utils = new utils();
+        this.Code = CodeInstance;
     }
 }
