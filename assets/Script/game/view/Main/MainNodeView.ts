@@ -21,13 +21,27 @@ export default class MainNodeView extends cc.Component {
     private btn: cc.Button;
 
     protected onLoad(): void {
+        
+        //初始化设置
+        cc.debug.setDisplayStats(true);
+        
+        //如果是网页版，则降低帧率
+        if(cc.sys.isBrowser) cc.game.setFrameRate(30);
+        
         //全局初始化
         Gloab.init();
+
+        //进入游戏
+        this.enterGame();
 
         this.text = this.node.getChildByName("label").getComponent(cc.Label);
         this.btn = this.node.getChildByName("addNum").getComponent(cc.Button);
 
         this.btn.node.on('click', this.clickCallBack, this);
+    }
+
+    private enterGame(){
+
     }
 
     clickCallBack() {
