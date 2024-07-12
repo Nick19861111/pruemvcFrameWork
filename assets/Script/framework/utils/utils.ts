@@ -18,4 +18,30 @@ export default class utils {
             cb.apply(null, Array.prototype.slice.call(arguments, 1));
         }
     }
+
+    /**
+     * 生成随机字符串
+     * @param len 
+     */
+    public randomString(len) {
+        len = len || 16;
+        let chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';    /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
+        let maxPos = chars.length;
+        let pwd = '';
+        for (let i = 0; i < len; i++) {
+            pwd += chars.charAt(Math.floor(Math.random() * maxPos));
+        }
+        return pwd;
+    }
+
+    /**
+     * 获得相关的大小点滴
+     * @param Min 小数据
+     * @param Max 大数据
+     */
+    public getRandomNum(Min, Max) {
+        let Range = Max - Min;
+        let Rand = Math.random();
+        return (Min + Math.round(Rand * Range));
+    }
 }

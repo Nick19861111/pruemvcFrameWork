@@ -3,6 +3,7 @@
 import CodeInstance from "./framework/constant/Code";
 import AudioManager from "./framework/manager/AudioManager";
 import DialogManager from "./framework/manager/DialogManager";
+import HttpManager from "./framework/manager/HttpManager";
 import MessageCallback from "./framework/manager/MessageCallback";
 import NetworkLogic from "./framework/manager/NetworkLogic";
 import NetworkManager from "./framework/manager/NetworkManager";
@@ -24,6 +25,8 @@ export default class Gloab {
     public static NetworkLogic = null;
     //事件管理
     public static MessageCallback = null;
+    //http请求类
+    public static Http = null;
 
     //初始化
     public static create() {
@@ -34,9 +37,11 @@ export default class Gloab {
         this.NetworkManager = new NetworkManager();
         this.NetworkLogic = new NetworkLogic();
         this.MessageCallback = new MessageCallback();
+        this.Http = new HttpManager();
     }
 
     public static init(){
         this.DialogManager.init();
+        this.NetworkLogic.init();
     }
 }

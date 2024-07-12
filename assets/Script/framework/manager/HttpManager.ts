@@ -11,7 +11,7 @@ export default class HttpManager  {
     * @param callback  返回函数
     * @returns 
     */
-    public static POST(url, param: object = {}, callback) {
+    public POST(url, param: object = {}, callback) {
         // url = HttpUtil.baseUrl + url;
         var xhr = cc.loader.getXMLHttpRequest();
         let dataStr = '';
@@ -46,7 +46,7 @@ export default class HttpManager  {
      * @param url           请求地址 
      * @param callback      返回的函数
      */
-    public static sendHttpGet(url: string, callback: (statusCode: number, resp: string, respText: string) => any) {
+    public sendHttpGet(url: string, callback: (statusCode: number, resp: string, respText: string) => any) {
         let xhr = new XMLHttpRequest();
         xhr.open("GET", url);
         xhr.onreadystatechange = function () {

@@ -38,6 +38,7 @@ export default class MainNodeView extends cc.Component {
         //进入游戏
         //this.enterGame();
 
+
         this.text = this.node.getChildByName("label").getComponent(cc.Label);
         this.btn = this.node.getChildByName("addNum").getComponent(cc.Button);
 
@@ -60,7 +61,39 @@ export default class MainNodeView extends cc.Component {
         console.log("点击了按钮了啊");
 
         Gloab.SoundMgr.playCommonSoundClickButton();
-        puremvc.Facade.getInstance().sendNotification("Reg_StartDataCommand");
+        //测试
+        let accountData = {
+            account: Gloab.Utils.randomString(16),
+            password: Gloab.Utils.randomString(16),
+            loginPlatform: 2,
+        }
+
+        let userInfo = {
+            nickname: "wx" + Gloab.Utils.getRandomNum(100000, 999999),
+            headimgurl: "",
+            sex: Gloab.Utils.getRandomNum(0, 1),
+        }
+
+
+        Gloab.Http.POST("http://127.0.0.1:13000/register", {
+            account:accountData.account,
+            password:accountData.password,
+            loginPlatform:accountData.loginPlatform,
+            smsCode:"",
+        }, function (response, data) {
+            console.log("收到服务器给的数据", JSON.parse(data));
+            let JsonData = JSON.parse(data);
+            if(JsonData.code == 0){
+                //成功
+                Gloab.NetworkLogic.connectToServer(JsonData.msg.serverInfo.host,JsonData.msg.serverInfo.port,function(){
+                    //链接成功
+                    //发送进入大厅的操作
+                    //to do
+                    console.log("链接服务器成功");
+                })
+            }
+        })
+        //puremvc.Facade.getInstance().sendNotification("Reg_StartDataCommand");
     }
 
     /**
