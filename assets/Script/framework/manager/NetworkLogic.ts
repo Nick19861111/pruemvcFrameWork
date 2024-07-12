@@ -10,9 +10,9 @@ export default class NetworkLogic {
     public init() {
         this.isManualCloseServerConnection = false;
 
-        Gloab.NetworkManager.addListener('ServerDisconnection', this);
-        Gloab.NetworkManager.addListener('ServerMessagePush', this);
-        Gloab.NetworkManager.addListener('PopDialogContentPush', this);
+        Gloab.MessageCallback.addListener('ServerDisconnection', this);
+        Gloab.MessageCallback.addListener('ServerMessagePush', this);
+        Gloab.MessageCallback.addListener('PopDialogContentPush', this);
 
         Gloab.NetworkManager.removeAllListeners();
         //推送
@@ -24,9 +24,9 @@ export default class NetworkLogic {
 
     public deInit() {
         //删除没用的消息
-        Gloab.NetworkManager.removeListener('ServerDisconnection', this);
-        Gloab.NetworkManager.removeListener('ServerMessagePush', this);
-        Gloab.NetworkManager.removeListener('PopDialogContentPush', this);
+        Gloab.MessageCallback.removeListener('ServerDisconnection', this);
+        Gloab.MessageCallback.removeListener('ServerMessagePush', this);
+        Gloab.MessageCallback.removeListener('PopDialogContentPush', this);
     }
 
     /**
