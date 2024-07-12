@@ -44,4 +44,17 @@ export default class utils {
         let Rand = Math.random();
         return (Min + Math.round(Rand * Range));
     }
+
+    /**
+    * 讲输入的数字格式化每个3位增加一个逗号的输出
+    * @param num 数字
+    * @returns 
+    */
+   public formatNumberWithCommas(num: number): string {
+       const numStr = num.toString();
+
+       const formattedStr = numStr.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+       return formattedStr;
+   }
 }
