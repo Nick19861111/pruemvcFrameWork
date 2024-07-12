@@ -118,7 +118,7 @@ export default class NetworkLogic {
                             this.isManualCloseServerConnection = false;
                         }
                     });
-                }, 2000);
+                }.bind(this), 2000);
             }else{
                 this.isManualCloseServerConnection = false;
             }

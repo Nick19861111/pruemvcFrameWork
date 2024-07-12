@@ -20,7 +20,7 @@ export default class NetworkManager {
             host: params.host,
             port: params.port,
             log: true
-        })
+        },cb)
     }
 
     /**
