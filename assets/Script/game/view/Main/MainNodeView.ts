@@ -32,8 +32,11 @@ export default class MainNodeView extends cc.Component {
         Gloab.create();
         Gloab.init();
 
+        //初始化网络
+        Gloab.NetworkLogic.init();
+
         //进入游戏
-        this.enterGame();
+        //this.enterGame();
 
         this.text = this.node.getChildByName("label").getComponent(cc.Label);
         this.btn = this.node.getChildByName("addNum").getComponent(cc.Button);
