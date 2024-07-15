@@ -36,7 +36,7 @@ export default class MainNodeView extends cc.Component {
         Gloab.NetworkLogic.init();
 
         //进入游戏
-        //this.enterGame();
+        this.enterGame();
 
 
         this.text = this.node.getChildByName("label").getComponent(cc.Label);
@@ -47,12 +47,17 @@ export default class MainNodeView extends cc.Component {
 
     private enterGame() {
         let loadDirArr = [
-            "Common"
+            "Common", "UI", "Game/Common"
         ];//加载相关操作
+        Gloab.DialogManager.addLoadingCircle();
         Gloab.DialogManager.createDialog("UI/Loading/LoadingDialog", {
             loadDirArr: loadDirArr, cb: function () {
                 console.log("加载资源完成");
-                Gloab.DialogManager.destroyDialog("UI/Loading/LoadingDialog");
+                Gloab.DialogManager.createDialog("UI/Login/LoginDialog", null, function () {
+                    Gloab.DialogManager.destroyDialog("UI/Loading/LoadingDialog");
+                    Gloab.DialogManager.removeLoadingCircle();
+                    puremvc.Facade.getInstance().sendNotification("openUI", "LoginDialog");
+                }.bind(this))
             }.bind(this)
         });
     }
