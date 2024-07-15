@@ -97,9 +97,14 @@ export default class MainNodeView extends cc.Component {
         //测试文字提示
         //Gloab.DialogManager.addTipDialog("helloworld");
         //测试弹窗操作
-        Gloab.DialogManager.addPopDialog("与服务器断开链接，请重新登陆",function(){
-            cc.game.restart();
-        })
+        // Gloab.DialogManager.addPopDialog("与服务器断开链接，请重新登陆",function(){
+        //     cc.game.restart();
+        // })
+        //测试
+        // Gloab.DialogManager.addLoadingCircle()
+        // this.scheduleOnce(()=>{
+        //     Gloab.DialogManager.removeLoadingCircle();
+        // },2);
     }
 
     /**

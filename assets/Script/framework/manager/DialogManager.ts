@@ -1,4 +1,5 @@
 import Gloab from "../../Gloab";
+import LoadingCircieDialog from "../components/LoadingCircieDialog";
 import PopDialog from "../components/PopDialog";
 import TipDialog from "../components/TipDialog";
 
@@ -17,6 +18,8 @@ export default class DialogManager {
     private fontNode: cc.Node = null;   //弹窗的大小
 
     private popDialog: PopDialog = null; //弹出对话框出现
+
+    private loadingCircleDialog: LoadingCircieDialog = null;
     //初始化
     public init(rootNode) {
         this.createDialogs = {};
@@ -31,6 +34,8 @@ export default class DialogManager {
         this.tipDialog = this.fontNode.getChildByName("TipDilog").getComponent(TipDialog);
         //弹出对话框
         this.popDialog = this.fontNode.getChildByName("PopDialog").getComponent(PopDialog);
+        //弹出loading界面控制类
+        this.loadingCircleDialog = this.fontNode.getChildByName("LoadingCircieDialog").getComponent(LoadingCircieDialog);
     }
 
     /**
@@ -197,5 +202,16 @@ export default class DialogManager {
     addPopDialog(content, cbOK, cbCancel, isRotate) {
         this.popDialog.node.active = true;
         this.popDialog.addPopDilog(content, cbOK, cbCancel, isRotate);
+    }
+
+    /**
+     * 添加loading
+     */
+    addLoadingCircle(delay) {
+        this.loadingCircleDialog.addLoadingCircle(delay);
+    }
+
+    removeLoadingCircle() {
+        this.loadingCircleDialog.removeLoadingCirle();
     }
 }
