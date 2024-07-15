@@ -5,7 +5,7 @@ import TipDialog from "../components/TipDialog";
 
 export default class DialogManager {
 
-    private createDialogs = {}; //是否创建
+
 
     private loadedDialogPrefabs = {};
 
@@ -22,7 +22,7 @@ export default class DialogManager {
     private loadingCircleDialog: LoadingCircieDialog = null;
     //初始化
     public init(rootNode) {
-        this.createDialogs = {};
+        this.createdDialogs = {};
         this.loadedDialogPrefabs = {};
         this.dialogNode = cc.find("Canvas/dialogNode");
 
