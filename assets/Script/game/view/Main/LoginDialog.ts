@@ -21,7 +21,7 @@ export default class LoginDialog extends cc.Component {
 
 
     onLoad() {
-        
+
     }
 
     onBtnClick(event, param) {
@@ -52,16 +52,28 @@ export default class LoginDialog extends cc.Component {
                         //成功
                         Gloab.NetworkLogic.connectToServer(JsonData.msg.serverInfo.host, JsonData.msg.serverInfo.port, function () {
                             //链接成功
-                            //发送进入大厅的操作
-                            //to do
                             console.log("链接服务器成功");
                             Gloab.DialogManager.removeLoadingCircle();
-                        })
+                            cc.sys.localStorage.setItem("accountDataArr", JSON.stringify([{
+                                account: accountData.account,
+                                password: accountData.password,
+                                loginPlatform: accountData.loginPlatform,
+                                smsCode: "",
+                            }]));
+                            this.enterGame();
+                        }.bind(this))
                     }
-                })
+                }.bind(this))
                 break;
             case "phone":
                 break;
         }
+    }
+
+    //进入游戏操作
+    enterGame() {
+        Gloab.DialogManager.createDialog("UI/Hall/HallDialog", { lastDialog: "login" }, function () {
+            Gloab.DialogManager.destroyDialog(this);
+        }.bind(this));
     }
 }
