@@ -40,8 +40,8 @@ export default class Gloab {
         this.Http = new HttpManager();
     }
 
-    public static init(){
-        this.DialogManager.init();
+    public static init(rootNode:cc.Node){
+        this.DialogManager.init(rootNode);
         this.NetworkLogic.init();
     }
 }

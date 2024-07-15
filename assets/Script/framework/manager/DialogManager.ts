@@ -1,4 +1,5 @@
 import Gloab from "../../Gloab";
+import TipDialog from "../components/TipDialog";
 
 export default class DialogManager {
 
@@ -9,11 +10,22 @@ export default class DialogManager {
     private createdDialogs = {};
 
     private dialogNode: cc.Node = null;//弹窗的节点
+
+    private tipDialog: TipDialog = null; //弹出文字的类
+
+    private fontNode: cc.Node = null;   //弹窗的大小
     //初始化
-    public init() {
+    public init(rootNode) {
         this.createDialogs = {};
         this.loadedDialogPrefabs = {};
         this.dialogNode = cc.find("Canvas/dialogNode");
+
+        this.fontNode = rootNode.getChildByName("fontNode");
+        this.fontNode.width = rootNode.width;
+        this.fontNode.height = rootNode.height;
+
+        //弹出文字相关
+        this.tipDialog = this.fontNode.getChildByName("TipDilog").getComponent(TipDialog);
     }
 
     /**
@@ -163,4 +175,13 @@ export default class DialogManager {
             }
         }
     };
+
+
+    /**
+     * 添加文字显示
+     * @param content 
+     */
+    addTipDialog(content) {
+        this.tipDialog.addTip(content);
+    }
 }

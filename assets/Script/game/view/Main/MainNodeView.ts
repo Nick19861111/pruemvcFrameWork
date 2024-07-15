@@ -30,7 +30,7 @@ export default class MainNodeView extends cc.Component {
 
         //全局初始化
         Gloab.create();
-        Gloab.init();
+        Gloab.init(this.node.parent);
 
         //初始化网络
         Gloab.NetworkLogic.init();
@@ -61,39 +61,41 @@ export default class MainNodeView extends cc.Component {
         console.log("点击了按钮了啊");
 
         Gloab.SoundMgr.playCommonSoundClickButton();
-        //测试
-        let accountData = {
-            account: Gloab.Utils.randomString(16),
-            password: Gloab.Utils.randomString(16),
-            loginPlatform: 2,
-        }
+        // //测试
+        // let accountData = {
+        //     account: Gloab.Utils.randomString(16),
+        //     password: Gloab.Utils.randomString(16),
+        //     loginPlatform: 2,
+        // }
 
-        let userInfo = {
-            nickname: "wx" + Gloab.Utils.getRandomNum(100000, 999999),
-            headimgurl: "",
-            sex: Gloab.Utils.getRandomNum(0, 1),
-        }
+        // let userInfo = {
+        //     nickname: "wx" + Gloab.Utils.getRandomNum(100000, 999999),
+        //     headimgurl: "",
+        //     sex: Gloab.Utils.getRandomNum(0, 1),
+        // }
 
 
-        Gloab.Http.POST("http://127.0.0.1:13000/register", {
-            account:accountData.account,
-            password:accountData.password,
-            loginPlatform:accountData.loginPlatform,
-            smsCode:"",
-        }, function (response, data) {
-            console.log("收到服务器给的数据", JSON.parse(data));
-            let JsonData = JSON.parse(data);
-            if(JsonData.code == 0){
-                //成功
-                Gloab.NetworkLogic.connectToServer(JsonData.msg.serverInfo.host,JsonData.msg.serverInfo.port,function(){
-                    //链接成功
-                    //发送进入大厅的操作
-                    //to do
-                    console.log("链接服务器成功");
-                })
-            }
-        })
+        // Gloab.Http.POST("http://127.0.0.1:13000/register", {
+        //     account:accountData.account,
+        //     password:accountData.password,
+        //     loginPlatform:accountData.loginPlatform,
+        //     smsCode:"",
+        // }, function (response, data) {
+        //     console.log("收到服务器给的数据", JSON.parse(data));
+        //     let JsonData = JSON.parse(data);
+        //     if(JsonData.code == 0){
+        //         //成功
+        //         Gloab.NetworkLogic.connectToServer(JsonData.msg.serverInfo.host,JsonData.msg.serverInfo.port,function(){
+        //             //链接成功
+        //             //发送进入大厅的操作
+        //             //to do
+        //             console.log("链接服务器成功");
+        //         })
+        //     }
+        // })
         //puremvc.Facade.getInstance().sendNotification("Reg_StartDataCommand");
+        //测试文字提示
+        Gloab.DialogManager.addTipDialog("helloworld");
     }
 
     /**
