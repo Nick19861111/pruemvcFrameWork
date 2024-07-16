@@ -5,6 +5,8 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/2.4/manual/en/scripting/life-cycle-callbacks.html
 
+import Gloab from "../../Gloab";
+
 const { ccclass, property } = cc._decorator;
 
 /**
@@ -47,9 +49,10 @@ export default class AudioManager extends cc.Component {
      * @param url url 
      * @param cb  返回的事件
      */
-    public startPlayBgMusic(url: string, cb: Function) {
+    public startPlayBgMusic(url: string, cb) {
         if (!url) {
             cc.error("startPlayBgMusic", "url:" + url);
+            Gloab.Utils.invokeCallback(cb, Gloab.Code.FAIL);
             return;
         }
         this.stopBgMusic();
@@ -57,7 +60,6 @@ export default class AudioManager extends cc.Component {
         cc.resources.load(url, cc.AudioClip, function (err, clip) {
             if (!!err) {
                 cc.error("startPlayBgMuisc faied" + err);
-                cb(err);
             }
             else {
                 //加载音乐
@@ -66,7 +68,7 @@ export default class AudioManager extends cc.Component {
                     cc.audioEngine.pause(this.currentBgMusic);
                 }
             }
-            cb();
+            Gloab.Utils.invokeCallback(cb, err);
         }.bind(this))
     }
 
