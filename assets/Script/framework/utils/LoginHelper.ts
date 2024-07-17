@@ -25,7 +25,6 @@ export default class LoginHelper {
             let JsonData = JSON.parse(data);
             if (JsonData.code == 0) {
                 //成功
-                cbSuccess(JsonData);
                 Gloab.NetworkLogic.connectToServer(JsonData.msg.serverInfo.host, JsonData.msg.serverInfo.port, function () {
                     //链接成功
                     console.log("链接服务器成功");
@@ -39,6 +38,7 @@ export default class LoginHelper {
                     }]));
 
                     cc.sys.localStorage.setItem("token", JsonData.token); //缓存token操作
+                    this.loginHall(JsonData.msg.token, userInfo, cbSuccess);
 
                 }.bind(this))
             }
@@ -46,5 +46,24 @@ export default class LoginHelper {
                 cbFail(JsonData.code)
             }
         }.bind(this))
+    }
+
+    /**
+     * 登陆到大厅的消息
+     * @param token 
+     * @param userInfo 
+     * @param cbSuccess 
+     */
+    private loginHall(token, userInfo, cbSuccess) {
+        console.log("loginHall call..");
+        userInfo = userInfo || {};
+        Gloab.Api.hallApi.entry(token, userInfo, function (data) {
+            console.log(data);
+            Gloab.Utils.invokeCallback(cbSuccess, data);
+            Gloab.MessageCallback.emitMessage("ReConnectSuccess");
+        }, function () {
+            Gloab.NetworkManager.disconnect();
+            Gloab.DialogManager.addTipDialog("进入大厅失败");
+        })
     }
 }

@@ -41,7 +41,7 @@ export default class LoginDialog extends cc.Component {
                 }
                 Gloab.DialogManager.addLoadingCircle();
 
-                Gloab.LoginHelper.register(accountData, null, function () {
+                Gloab.LoginHelper.register(accountData, userInfo, function () {
                     //成功的话
                     this.enterGame();
                 }.bind(this), function (data) {
