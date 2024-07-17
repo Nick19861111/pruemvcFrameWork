@@ -60,7 +60,7 @@ export default class LoginHelper {
         Gloab.Api.hallApi.entry(token, userInfo, function (data) {
             console.log(data);
             Gloab.Utils.invokeCallback(cbSuccess, data);
-            Gloab.MessageCallback.emitMessage("ReConnectSuccess");
+            
         }, function () {
             Gloab.NetworkManager.disconnect();
             Gloab.DialogManager.addTipDialog("进入大厅失败");

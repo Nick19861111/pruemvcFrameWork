@@ -66,6 +66,7 @@ export default class LoginDialog extends cc.Component {
         Gloab.DialogManager.createDialog("UI/Hall/HallDialog", { lastDialog: "login" }, function () {
             Gloab.DialogManager.destroyDialog(this);
             puremvc.Facade.getInstance().sendNotification("openUI", "HallDialog");
+            Gloab.MessageCallback.emitMessage("ReConnectSuccess");
         }.bind(this));
     }
 }

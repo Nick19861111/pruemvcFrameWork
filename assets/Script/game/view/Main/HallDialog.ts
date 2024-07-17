@@ -83,6 +83,7 @@ export default class HallDialog extends cc.Component {
             case "UpdateUserInfoUI":
                 break;
             case "ReConnectSuccess":
+                console.log("服务器连接成功");
                 break;
         }
     }
