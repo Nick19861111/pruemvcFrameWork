@@ -67,4 +67,15 @@ export default class LoginHelper {
             Gloab.DialogManager.addTipDialog("进入大厅失败");
         })
     }
+
+    /**
+     * 重新链接服务器
+     * @param token 
+     * @param cbSuccess 
+     * @param cbFail 
+     */
+    public reconnection(token,cbSuccess,cbFail){
+        //重新链接服务器
+        console.log("重新链接服务器");
+    }
 }

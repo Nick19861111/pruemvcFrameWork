@@ -47,7 +47,7 @@ export default class NetworkLogic {
      * 是否自动断链接
      * @param autoReconnect 
      */
-    public disconnect(autoReconnect){
+    public disconnect(autoReconnect) {
         this.isManualCloseServerConnection = !autoReconnect;
         Gloab.NetworkManager.disconnect();
     }
@@ -56,14 +56,22 @@ export default class NetworkLogic {
      * 是否重新链接
      * @param cb 
      */
-    public reconnection(cb){
+    public reconnection(cb) {
         let token = cc.sys.localStorage.getItem('token');
-        if(!token){
-            //弹出已经断网要求登陆的操作
-            //to do
+        if (!token) {
+            Gloab.DialogManager.removeLoadingCircle();//停止loading界面
+            Gloab.DialogManager.addPopDialog("与服务器断开链接，请重新登陆", function () {
+                cc.game.restart();
+            }.bind(this))
         }
-        else{
+        else {
             //todo 重连操作
+            Gloab.LoginHelper.reconnection(token, function (data) {
+                Gloab.Utils.invokeCallback(cb, data);
+            }, function () {
+                Gloab.Utils.invokeCallback(cb, { code: 1 });
+                Gloab.DialogManager.removeLoadingCircle();
+            })
         }
     }
 
@@ -72,54 +80,54 @@ export default class NetworkLogic {
      * @param router 
      * @param data 
      */
-    public messageCallbackHandler(router, data){
+    public messageCallbackHandler(router, data) {
         if (router === 'PopDialogContentPush') {
-            // if (!!Global.Code[data.code]) {
-            //     Global.DialogManager.addPopDialog(Global.Code[data.code]);
-            // } else if (!!data.content){
-            //     Global.DialogManager.addPopDialog(data.content);
-            // } else{
-            //     Global.DialogManager.addPopDialog('游戏错误，错误码：' + data.code);
-            // }
+            if (!!Gloab.Code.getErrorMessage(data.code)) {
+                Gloab.DialogManager.addPopDialog(Gloab.Code.getErrorMessage(data.code));
+            } else if (!!data.content) {
+                Gloab.DialogManager.addPopDialog(data.content);
+            } else {
+                Gloab.DialogManager.addPopDialog('游戏错误，错误码：' + data.code);
+            }
             //推动消息出现问题
-        } else if (router === 'ServerMessagePush'){
-            if (!data.pushRouter){
+        } else if (router === 'ServerMessagePush') {
+            if (!data.pushRouter) {
                 console.error('ServerMessagePush push router is invalid', data);
                 return;
             }
             //推送消息
             console.log("收到推送消息");
-            //messageCallback.emitMessage(data.pushRouter, data);
-        } else if (router === 'ServerDisconnection'){
+            Gloab.MessageCallback.emitMessage(data.pushRouter, data);
+        } else if (router === 'ServerDisconnection') {
             // 检测是否是系统主动断开连接
-            if(data.code === 1000 && !this.isManualCloseServerConnection){
-                //Global.DialogManager.removeLoadingCircle();
-                // dialogManager.addPopDialog("服务器主动断开连接，请稍后登录", function(){
-                //     cc.sys.localStorage.setItem("token", "");
-                //     cc.game.restart();
-                // });
+            if (data.code === 1000 && !this.isManualCloseServerConnection) {
+                Gloab.DialogManager.removeLoadingCircle();
+                Gloab.DialogManager.addPopDialog("服务器主动断开连接，请稍后登录", function () {
+                    cc.sys.localStorage.setItem("token", "");
+                    cc.game.restart();
+                });
                 //断开消息
                 return;
             }
             // 如果不是手动断开则执行断线重连
-            if (!this.isManualCloseServerConnection){
-                // Global.DialogManager.addLoadingCircle();
+            if (!this.isManualCloseServerConnection) {
+                Gloab.DialogManager.addLoadingCircle();
                 setTimeout(function () {
-                    // Global.DialogManager.removeLoadingCircle();
+                    Gloab.DialogManager.removeLoadingCircle();
                     this.reconnection(function (data) {
-                        if (!data || data.code !== 0){
-                            // dialogManager.addPopDialog("与服务器断开连接，请重新登录", function(){
-                            //     cc.sys.localStorage.setItem("token", "");
-                            //     cc.game.restart();
-                            // });
+                        if (!data || data.code !== 0) {
+                            Gloab.DialogManager.addPopDialog("与服务器断开连接，请重新登录", function () {
+                                cc.sys.localStorage.setItem("token", "");
+                                cc.game.restart();
+                            });
                             console.log("断开以后的推出");
-                            
-                        }else{
+
+                        } else {
                             this.isManualCloseServerConnection = false;
                         }
                     });
                 }.bind(this), 2000);
-            }else{
+            } else {
                 this.isManualCloseServerConnection = false;
             }
         }
