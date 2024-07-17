@@ -38,7 +38,7 @@ export default class HttpManager {
                         callback(false, "Response parsing error: " + e.message);
                     }
                 } else { // 请求失败
-                    callback(false, JSON.stringify({ code: 1 }));
+                    callback(false, JSON.stringify({ code: Gloab.Code.FAIL }));
                     //Gloab.Utils.invokeCallback(callback, 1);
                 }
             }
@@ -46,12 +46,12 @@ export default class HttpManager {
 
         //处理请求错误
         xhr.onerror = function () {
-            callback(false, JSON.stringify({ code: 1 }));
+            callback(false, JSON.stringify({ code: Gloab.Code.FAIL }));
             //Gloab.Utils.invokeCallback(callback, 1);
         }
 
         xhr.ontimeout = function () {
-            callback(false, JSON.stringify({ code: 1 }));
+            callback(false, JSON.stringify({ code: Gloab.Code.FAIL }));
             console.log("请求超时");
             //Gloab.Utils.invokeCallback(callback, 1);
         }
