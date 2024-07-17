@@ -7,6 +7,8 @@ import HttpManager from "./framework/manager/HttpManager";
 import MessageCallback from "./framework/manager/MessageCallback";
 import NetworkLogic from "./framework/manager/NetworkLogic";
 import NetworkManager from "./framework/manager/NetworkManager";
+import ConfigModel from "./framework/models/ConfigModel";
+import LoginHelper from "./framework/utils/LoginHelper";
 import utils from "./framework/utils/utils";
 
 export default class Gloab {
@@ -27,6 +29,10 @@ export default class Gloab {
     public static MessageCallback = null;
     //http请求类
     public static Http = null;
+    //配置表相关
+    public static CondigModel = null;
+    //登陆辅助类
+    public static LoginHelper: LoginHelper = null;
 
     //初始化
     public static create() {
@@ -38,9 +44,11 @@ export default class Gloab {
         this.NetworkLogic = new NetworkLogic();
         this.MessageCallback = new MessageCallback();
         this.Http = new HttpManager();
+        this.CondigModel = new ConfigModel();
+        this.LoginHelper = new LoginHelper();
     }
 
-    public static init(rootNode:cc.Node){
+    public static init(rootNode: cc.Node) {
         this.DialogManager.init(rootNode);
         this.NetworkLogic.init();
     }

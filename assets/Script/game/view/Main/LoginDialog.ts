@@ -40,33 +40,21 @@ export default class LoginDialog extends cc.Component {
                     sex: Gloab.Utils.getRandomNum(0, 1),
                 }
                 Gloab.DialogManager.addLoadingCircle();
-                Gloab.Http.POST("http://127.0.0.1:13000/register", {
-                    account: accountData.account,
-                    password: accountData.password,
-                    loginPlatform: accountData.loginPlatform,
-                    smsCode: "",
-                }, function (response, data) {
-                    console.log("收到服务器给的数据", JSON.parse(data));
-                    let JsonData = JSON.parse(data);
-                    if (JsonData.code == 0) {
-                        //成功
-                        Gloab.NetworkLogic.connectToServer(JsonData.msg.serverInfo.host, JsonData.msg.serverInfo.port, function () {
-                            //链接成功
-                            console.log("链接服务器成功");
-                            Gloab.DialogManager.removeLoadingCircle();
-                            //用户的相关数据
-                            cc.sys.localStorage.setItem("accountDataArr", JSON.stringify([{
-                                account: accountData.account,
-                                password: accountData.password,
-                                loginPlatform: accountData.loginPlatform,
-                                smsCode: "",
-                            }]));
 
-                            cc.sys.localStorage.setItem("token", JsonData.token); //缓存token操作
-                            this.enterGame();
+                Gloab.LoginHelper.register(accountData, null, function () {
+                    //成功的话
+                    this.enterGame();
+                }.bind(this), function (data) {
+                    let err = data.code;
+                    if (err == Gloab.Code.ACCOUNT_OR_PASSWORD_ERROR) {
+                        Gloab.DialogManager.addPopDialog("账号密码错误，是否清理当前账号", function () {
+                            cc.sys.localStorage.setItem("accountDataArr", "");
                         }.bind(this))
                     }
-                }.bind(this))
+                    else {
+                        Gloab.DialogManager.addPopDialog("登陆失败请检查网络");
+                    }
+                })
                 break;
             case "phone":
                 break;
@@ -77,7 +65,7 @@ export default class LoginDialog extends cc.Component {
     enterGame() {
         Gloab.DialogManager.createDialog("UI/Hall/HallDialog", { lastDialog: "login" }, function () {
             Gloab.DialogManager.destroyDialog(this);
-            puremvc.Facade.getInstance().sendNotification("openUI","HallDialog");
+            puremvc.Facade.getInstance().sendNotification("openUI", "HallDialog");
         }.bind(this));
     }
 }
