@@ -20,7 +20,7 @@ export default class NetworkManager {
             host: params.host,
             port: params.port,
             log: true
-        },cb)
+        }, cb)
     }
 
     /**
@@ -50,6 +50,8 @@ export default class NetworkManager {
 
             //判断是否成功
             if (data.code !== Gloab.Code.OK) {
+                Gloab.DialogManager.removeLoadingCircle();
+
                 if (!!cbFail && (typeof (cbFail) === 'function')) {
                     cbFail(data);
                     return;
@@ -58,8 +60,10 @@ export default class NetworkManager {
                 //报错
                 if (!!Gloab.Code.getErrorMessage[data.code]) {
                     console.log("报错");
+                    Gloab.DialogManager.addTipDialog(Gloab.Code.getErrorMessage(data.code));
                 } else {
                     console.log("游戏错误吗" + data.code);
+                    Gloab.DialogManager.addTipDialog("游戏错误，错误码：" + data.code)
                 }
             }
             else {
@@ -117,7 +121,7 @@ export default class NetworkManager {
     /**
      * 删除全部
      */
-    removeAllListeners(){
+    removeAllListeners() {
         this.pomelo.removeAllListeners();
     }
 }
