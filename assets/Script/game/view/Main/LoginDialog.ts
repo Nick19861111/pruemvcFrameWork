@@ -54,12 +54,15 @@ export default class LoginDialog extends cc.Component {
                             //链接成功
                             console.log("链接服务器成功");
                             Gloab.DialogManager.removeLoadingCircle();
+                            //用户的相关数据
                             cc.sys.localStorage.setItem("accountDataArr", JSON.stringify([{
                                 account: accountData.account,
                                 password: accountData.password,
                                 loginPlatform: accountData.loginPlatform,
                                 smsCode: "",
                             }]));
+
+                            cc.sys.localStorage.setItem("token", JsonData.token); //缓存token操作
                             this.enterGame();
                         }.bind(this))
                     }
@@ -74,6 +77,7 @@ export default class LoginDialog extends cc.Component {
     enterGame() {
         Gloab.DialogManager.createDialog("UI/Hall/HallDialog", { lastDialog: "login" }, function () {
             Gloab.DialogManager.destroyDialog(this);
+            puremvc.Facade.getInstance().sendNotification("openUI","HallDialog");
         }.bind(this));
     }
 }

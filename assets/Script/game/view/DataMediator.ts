@@ -1,5 +1,6 @@
 import Gloab from "../../Gloab";
 import MyData from "../model/MyData"
+import HallDialog from "./Main/HallDialog";
 import LoginDialog from "./Main/LoginDialog";
 import MainNodeView from "./Main/MainNodeView";
 export default class DataMediator extends puremvc.Mediator {
@@ -7,13 +8,13 @@ export default class DataMediator extends puremvc.Mediator {
 
     private login: LoginDialog = null;
 
-    private root:cc.Node = null;
+    private hall: HallDialog = null; //主界面
+
+    private root: cc.Node = null;
     constructor(root: cc.Node) {
         super();
         this.root = root;
     }
-
-
 
     public listNotificationInterests() {
         let list: Array<string> = [];
@@ -24,10 +25,16 @@ export default class DataMediator extends puremvc.Mediator {
 
     private openUI(uiName) {
         console.log("执行了打开ui的操作", uiName);
-        if (this.root.getChildByName("dialogNode").childrenCount > 0) {
-            if (this.root.getChildByName("dialogNode").children[1].name == "LoginDialog") {
-                console.log("此时是login");
-                this.login = this.root.getChildByName("dialogNode").getChildByName("LoginDialog").getComponent(LoginDialog);
+        let rootNode = this.root.getChildByName("dialogNode");
+        if (rootNode.childrenCount > 0) {
+            let name = rootNode.children[1].name;
+            switch (name) {
+                case "LoginDialog":
+                    this.login = rootNode.getChildByName("LoginDialog").getComponent(LoginDialog);
+                    break;
+                case "HallDialog":
+                    this.hall = rootNode.getChildByName("HallDialog").getComponent(HallDialog);
+                    break;
             }
         }
     }
