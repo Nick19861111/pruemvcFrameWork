@@ -97,6 +97,12 @@ export default class NetworkManager {
         this.pomelo.notify(route, msg);
     }
 
+    /**
+     * 添加事件
+     * @param route 
+     * @param cbRoute 
+     * @returns 
+     */
     addReceiveListen(route, cbRoute) {
         cbRoute = cbRoute || route;
         let pushCallback = function (msg) {
