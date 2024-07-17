@@ -1,5 +1,3 @@
-
-
 import CodeInstance from "./framework/constant/Code";
 import AudioManager from "./framework/manager/AudioManager";
 import DialogManager from "./framework/manager/DialogManager";
@@ -11,6 +9,7 @@ import ConfigModel from "./framework/models/ConfigModel";
 import Api from "./framework/utils/Api";
 import LoginHelper from "./framework/utils/LoginHelper";
 import utils from "./framework/utils/utils";
+import UserModel from "./game/model/UserModel";
 
 export default class Gloab {
 
@@ -36,6 +35,8 @@ export default class Gloab {
     public static LoginHelper: LoginHelper = null;
     //api相关的辅助
     public static Api:Api = null;
+    //用户模型数据
+    public static UserModel:UserModel = null;
 
     //初始化
     public static create() {
@@ -50,6 +51,7 @@ export default class Gloab {
         this.CondigModel = new ConfigModel();
         this.LoginHelper = new LoginHelper();
         this.Api = new Api();
+        this.UserModel = new UserModel();
     }
 
     public static init(rootNode: cc.Node) {

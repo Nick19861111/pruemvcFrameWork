@@ -28,7 +28,7 @@ export default class LoginHelper {
                 Gloab.NetworkLogic.connectToServer(JsonData.msg.serverInfo.host, JsonData.msg.serverInfo.port, function () {
                     //链接成功
                     console.log("链接服务器成功");
-                    Gloab.DialogManager.removeLoadingCircle();
+
                     //用户的相关数据
                     cc.sys.localStorage.setItem("accountDataArr", JSON.stringify([{
                         account: data.account,
@@ -59,8 +59,17 @@ export default class LoginHelper {
         userInfo = userInfo || {};
         Gloab.Api.hallApi.entry(token, userInfo, function (data) {
             console.log(data);
+
+            // 初始化配置数据
+            Gloab.CondigModel.init(data.msg.config);
+
+            //映射用户数据
+            Gloab.UserModel.init(data.msg.userInfo);
+
+            Gloab.DialogManager.removeLoadingCircle();
+
             Gloab.Utils.invokeCallback(cbSuccess, data);
-            
+
         }, function () {
             Gloab.NetworkManager.disconnect();
             Gloab.DialogManager.addTipDialog("进入大厅失败");

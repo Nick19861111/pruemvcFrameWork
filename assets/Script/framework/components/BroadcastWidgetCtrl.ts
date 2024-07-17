@@ -103,7 +103,7 @@ export default class BroadcastWidgetCtrl extends cc.Component {
 
         //移动
         let moveEnd = cc.callFunc(function () {
-            this.rootNode.account = false;
+            this.rootNode.active = false;
             this.startNext();
         }.bind(this));
 
