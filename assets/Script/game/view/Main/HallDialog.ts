@@ -84,6 +84,7 @@ export default class HallDialog extends cc.Component {
                 break;
             case "ReConnectSuccess":
                 console.log("服务器连接成功");
+                this.updatePlayerInfo()
                 break;
         }
     }
@@ -96,7 +97,11 @@ export default class HallDialog extends cc.Component {
      * 更新用户数据
      */
     updatePlayerInfo() {
-
+        console.log("执行更新用户信息", Gloab.UserModel.getProperties("nickname"));
+        this.nickName.string = Gloab.UserModel.getProperties("nickname");
+        this.uidLabel.string = "ID:" + Gloab.UserModel.getProperties("uid");
+        this.soreText.string = Gloab.UserModel.getProperties("gold");
+        this.inviteBtn.active = Gloab.UserModel.getProperties("inviteMsg").length > 0;
     }
 
     onBtnClick(event, param) {
