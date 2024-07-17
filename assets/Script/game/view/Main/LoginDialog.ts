@@ -41,7 +41,8 @@ export default class LoginDialog extends cc.Component {
                 }
                 Gloab.DialogManager.addLoadingCircle();
 
-                Gloab.LoginHelper.register(accountData, userInfo, function () {
+                Gloab.LoginHelper.register(accountData, userInfo, function (data) {
+                    puremvc.Facade.getInstance().sendNotification("Reg_StartDataCommand", { type: "register", data: data });
                     //成功的话
                     this.enterGame();
                 }.bind(this), function (data) {
@@ -66,7 +67,8 @@ export default class LoginDialog extends cc.Component {
         Gloab.DialogManager.createDialog("UI/Hall/HallDialog", { lastDialog: "login" }, function () {
             Gloab.DialogManager.destroyDialog(this);
             puremvc.Facade.getInstance().sendNotification("openUI", "HallDialog");
-            Gloab.MessageCallback.emitMessage("ReConnectSuccess");
+            // Gloab.MessageCallback.emitMessage("ReConnectSuccess");
+            puremvc.Facade.getInstance().sendNotification("ReConnectSuccess");
         }.bind(this));
     }
 }

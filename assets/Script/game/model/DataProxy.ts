@@ -1,3 +1,4 @@
+import Gloab from "../../Gloab";
 import MyData from "./MyData"
 /**
  * 模型层
@@ -5,7 +6,6 @@ import MyData from "./MyData"
  */
 export default class DataProxy extends puremvc.Proxy {
     public proxyName = "DataProxy";
-    private MyData: MyData = null;
     private static instance: DataProxy = null;
 
     public static getInstance() {
@@ -18,11 +18,17 @@ export default class DataProxy extends puremvc.Proxy {
     constructor() {
         super();
         puremvc.Proxy.NAME = "DataProxy";
-        this.MyData = new MyData();
+        
     }
 
-    public AddLevel(addNumber: number) {
-        this.MyData.Level += addNumber;
-        this.sendNotification("Msg_AddLevel", this.MyData);
+    /**
+     * 注册成功
+     */
+    public registerSuessce(data){
+        // // 初始化配置数据
+        Gloab.CondigModel.init(data.msg.config);
+
+        //映射用户数据
+        Gloab.UserModel.init(data.msg.userInfo);
     }
 }

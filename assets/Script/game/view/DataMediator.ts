@@ -20,6 +20,7 @@ export default class DataMediator extends puremvc.Mediator {
         let list: Array<string> = [];
         list.push("Msg_AddLevel");
         list.push("openUI");
+        list.push("ReConnectSuccess");
         return list;
     }
 
@@ -46,6 +47,11 @@ export default class DataMediator extends puremvc.Mediator {
                 break;
             case "openUI":
                 this.openUI(notification.getBody());
+                break;
+            case "ReConnectSuccess":
+                if(this.hall){
+                    this.hall.updatePlayerInfo();
+                }
                 break;
         }
     }
