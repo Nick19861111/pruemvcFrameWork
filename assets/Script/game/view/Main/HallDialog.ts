@@ -130,6 +130,7 @@ export default class HallDialog extends cc.Component {
             case "createRoom":
                 break;
             case "joinRoom":
+                Gloab.DialogManager.createDialog("UI/Room/JoinRoomDialog", { type: "hall" });
                 break;
             case "friends":
                 break;
