@@ -29,14 +29,10 @@ export default class HttpManager {
             if (xhr.readyState === 4) { // 请求完成
                 let response = xhr.responseText;
                 if (xhr.status >= 200 && xhr.status < 300) { // 请求成功
-                    try {
-                        // 尝试解析 JSON 响应
-                        let jsonResponse = JSON.parse(response);
-                        callback(true, jsonResponse);
-                    } catch (e) {
-                        // JSON 解析失败
-                        callback(false, "Response parsing error: " + e.message);
-                    }
+
+                    // 尝试解析 JSON 响应
+                    callback(true, response);
+
                 } else { // 请求失败
                     callback(false, JSON.stringify({ code: Gloab.Code.FAIL }));
                     //Gloab.Utils.invokeCallback(callback, 1);

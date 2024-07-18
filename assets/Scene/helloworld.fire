@@ -87,13 +87,13 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 71
-      },
-      {
         "__id__": 72
       },
       {
         "__id__": 73
+      },
+      {
+        "__id__": 74
       }
     ],
     "_prefab": null,
@@ -1112,7 +1112,7 @@
         "__id__": 32
       },
       {
-        "__id__": 61
+        "__id__": 62
       }
     ],
     "_active": true,
@@ -1558,6 +1558,9 @@
     "_components": [
       {
         "__id__": 60
+      },
+      {
+        "__id__": 61
       }
     ],
     "_prefab": null,
@@ -2860,6 +2863,22 @@
     "_id": "20XoacYDFEBpPeKZeMV+ZX"
   },
   {
+    "__type__": "fe10duS3iJEaLTp5+OMwE97",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 32
+    },
+    "_enabled": true,
+    "maskNode": {
+      "__id__": 33
+    },
+    "popUpNode": {
+      "__id__": 36
+    },
+    "_id": "d6t6UjboRP3JLHQbHoqm5E"
+  },
+  {
     "__type__": "cc.Node",
     "_name": "LoadingCircieDialog",
     "_objFlags": 0,
@@ -2868,19 +2887,19 @@
     },
     "_children": [
       {
-        "__id__": 62
+        "__id__": 63
       }
     ],
     "_active": false,
     "_components": [
       {
-        "__id__": 68
-      },
-      {
         "__id__": 69
       },
       {
         "__id__": 70
+      },
+      {
+        "__id__": 71
       }
     ],
     "_prefab": null,
@@ -2936,20 +2955,20 @@
     "_name": "load_bg",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 61
+      "__id__": 62
     },
     "_children": [
       {
-        "__id__": 63
+        "__id__": 64
       },
       {
-        "__id__": 65
+        "__id__": 66
       }
     ],
     "_active": true,
     "_components": [
       {
-        "__id__": 67
+        "__id__": 68
       }
     ],
     "_prefab": null,
@@ -3005,13 +3024,13 @@
     "_name": "img_load_flower",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 62
+      "__id__": 63
     },
     "_children": [],
     "_active": true,
     "_components": [
       {
-        "__id__": 64
+        "__id__": 65
       }
     ],
     "_prefab": null,
@@ -3067,7 +3086,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 63
+      "__id__": 64
     },
     "_enabled": true,
     "_materials": [
@@ -3099,13 +3118,13 @@
     "_name": "tip",
     "_objFlags": 0,
     "_parent": {
-      "__id__": 62
+      "__id__": 63
     },
     "_children": [],
     "_active": true,
     "_components": [
       {
-        "__id__": 66
+        "__id__": 67
       }
     ],
     "_prefab": null,
@@ -3161,7 +3180,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 65
+      "__id__": 66
     },
     "_enabled": true,
     "_materials": [
@@ -3196,7 +3215,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 62
+      "__id__": 63
     },
     "_enabled": true,
     "_materials": [
@@ -3228,7 +3247,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 61
+      "__id__": 62
     },
     "_enabled": true,
     "_normalMaterial": null,
@@ -3296,7 +3315,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 61
+      "__id__": 62
     },
     "_enabled": true,
     "alignMode": 1,
@@ -3323,11 +3342,11 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 61
+      "__id__": 62
     },
     "_enabled": true,
     "Circle": {
-      "__id__": 63
+      "__id__": 64
     },
     "_id": "19m0bESnlIj6TRlDPFHElO"
   },

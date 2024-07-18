@@ -147,7 +147,7 @@ export default class AudioManager extends cc.Component {
      */
     public setSoundVolume(volume) {
         this.soundVolume = parseFloat(volume);
-        cc.sys.localStorage.setItem("SoundVolume", this.soundVolume);
+        cc.sys.localStorage.setItem("SoundVolume", this.soundVolume );
     }
 
     /**

@@ -122,6 +122,7 @@ export default class HallDialog extends cc.Component {
             case "union":
                 break;
             case "settings":
+                Gloab.DialogManager.createDialog("UI/Setting/SettingDialog", { type: "hall" });
                 break;
             case "realname":
                 break;
