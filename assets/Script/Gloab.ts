@@ -1,4 +1,5 @@
 import CodeInstance from "./framework/constant/Code";
+import enumeration from "./framework/constant/enumeration";
 import AudioManager from "./framework/manager/AudioManager";
 import DialogManager from "./framework/manager/DialogManager";
 import HttpManager from "./framework/manager/HttpManager";
@@ -37,6 +38,8 @@ export default class Gloab {
     public static Api:Api = null;
     //用户模型数据
     public static UserModel:UserModel = null;
+    //各种类型
+    public static Enum:enumeration = null;
 
     //初始化
     public static create() {
@@ -52,6 +55,7 @@ export default class Gloab {
         this.LoginHelper = new LoginHelper();
         this.Api = new Api();
         this.UserModel = new UserModel();
+        this.Enum = new enumeration();
     }
 
     public static init(rootNode: cc.Node) {
