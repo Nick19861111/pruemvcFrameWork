@@ -45,6 +45,8 @@ export default class SettingDialog extends cc.Component {
 
             this.sliderMusic.progress = musicValue;
             this.sliderSound.progress = musicValue;
+
+
         }
         else {
             this.progressMusic.progress = DEF_SOUND_VALUE;
@@ -53,6 +55,9 @@ export default class SettingDialog extends cc.Component {
             this.sliderMusic.progress = DEF_SOUND_VALUE;
             this.sliderSound.progress = DEF_SOUND_VALUE;
         }
+
+        Gloab.SoundMgr.setMusicVolume(this.progressMusic.progress);
+        Gloab.SoundMgr.setSoundVolume(this.progSound.progress);
     }
 
     onBtnClk(event, param) {

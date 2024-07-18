@@ -67,6 +67,20 @@ export default class HallDialog extends cc.Component {
             this.maskNode.x = -200;
             this.maskNode.y = 300;
         }.bind(this))])))
+
+        //声音设置大小
+        //获得缓存数据
+        let musicValue = cc.sys.localStorage.getItem("MusicVolume");
+        let soundValue = cc.sys.localStorage.getItem("SoundVolume");
+        if (!!musicValue && !!soundValue) {
+            Gloab.SoundMgr.setMusicVolume(musicValue);
+            Gloab.SoundMgr.setSoundVolume(soundValue);
+        }
+        else {
+            Gloab.SoundMgr.setMusicVolume(1);
+            Gloab.SoundMgr.setSoundVolume(1);
+        }
+
     }
 
     protected onDestroy(): void {
