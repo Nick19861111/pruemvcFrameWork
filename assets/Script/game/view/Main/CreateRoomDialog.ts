@@ -63,12 +63,34 @@ export default class CreateRoomDialog extends cc.Component {
 
     //点击事件
     onGameTypeClick(event, params) {
+        if (params == "PDK") {
+            this.gameType = Gloab.Enum.gameType.PDK;
+        }
+        else if (params == "NN") {
+            this.gameType = Gloab.Enum.gameType.NN;
+        } else if (params == "SG") {
+            this.gameType = Gloab.Enum.gameType.SG;
+        } else if (params == "SZ") {
+            this.gameType = Gloab.Enum.gameType.SZ;
+        }
+        else if (params == "ZNMJ") {
+            this.gameType = Gloab.Enum.gameType.ZNMJ;
+        }
+        else if (params == "DGN") {
+            this.gameType = Gloab.Enum.gameType.DGN;
+        }
 
+        this.pkRuleNode.active = (params == "PDK");
+        this.nnRuleNode.active = (params == "NN");
+        this.sgRuleNode.active = (params == "SG");
+        this.szRuleNode.active = (params == "SZ");
+        this.znmjRuleNode.active = (params == "ZNMJ");
+        this.dgnRuleNode.active = (params == "DGN");
     }
 
     //点击事件
-    onBtnClk(event,params){
-        switch(params){
+    onBtnClk(event, params) {
+        switch (params) {
             case "close":
                 Gloab.DialogManager.destroyDialog(this);
                 break;
