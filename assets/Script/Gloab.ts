@@ -9,6 +9,7 @@ import NetworkManager from "./framework/manager/NetworkManager";
 import ConfigModel from "./framework/models/ConfigModel";
 import Api from "./framework/utils/Api";
 import LoginHelper from "./framework/utils/LoginHelper";
+import PlanformHelper from "./framework/utils/PlanformHelper";
 import utils from "./framework/utils/utils";
 import UserModel from "./game/model/UserModel";
 
@@ -35,11 +36,13 @@ export default class Gloab {
     //登陆辅助类
     public static LoginHelper: LoginHelper = null;
     //api相关的辅助
-    public static Api:Api = null;
+    public static Api: Api = null;
     //用户模型数据
-    public static UserModel:UserModel = null;
+    public static UserModel: UserModel = null;
     //各种类型
-    public static Enum:enumeration = null;
+    public static Enum: enumeration = null;
+    //一些常用帮助类
+    public static PlatformHelper: PlanformHelper = null;
 
     //初始化
     public static create() {
@@ -56,6 +59,7 @@ export default class Gloab {
         this.Api = new Api();
         this.UserModel = new UserModel();
         this.Enum = new enumeration();
+        this.PlatformHelper = new PlanformHelper();
     }
 
     public static init(rootNode: cc.Node) {

@@ -11,4 +11,14 @@ export default class HallApi {
         }
         Gloab.NetworkManager.send(router, requestData, cbRouter || "EntryHallResponse", cbFail);
     }
+
+    //实名认真
+    public updateUserAddressRequest(address, location, cbRouter) {
+        let router = "hall.userHandler.updateUserAddress";//对应的路径
+        let requestData = {
+            address: address,
+            location: location
+        }
+        Gloab.NetworkManager.send(router, requestData, cbRouter);
+    }
 }

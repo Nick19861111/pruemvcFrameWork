@@ -56,18 +56,6 @@ export default class HallDialog extends cc.Component {
         //播放背景音乐
         Gloab.SoundMgr.startPlayBgMusic("UI/Hall/Sound/hall_bg_music1");
 
-        //是否进入房间
-        this.checkJoinRoom();
-
-        //更新用户信息
-        this.updatePlayerInfo();
-
-        //移动位置
-        this.maskNode.runAction(cc.repeatForever(cc.sequence([cc.moveTo(2, cc.v2(200, -300)), cc.delayTime(2), cc.callFunc(function () {
-            this.maskNode.x = -200;
-            this.maskNode.y = 300;
-        }.bind(this))])))
-
         //声音设置大小
         //获得缓存数据
         let musicValue = cc.sys.localStorage.getItem("MusicVolume");
@@ -80,6 +68,28 @@ export default class HallDialog extends cc.Component {
             Gloab.SoundMgr.setMusicVolume(1);
             Gloab.SoundMgr.setSoundVolume(1);
         }
+
+
+        //登陆获得定位信息
+        Gloab.PlatformHelper.getLocation(function (err, result) {
+            if (!err) {
+                Gloab.Api.hallApi.updateUserAddressRequest(result.address || "", result.location || "", null);
+            }
+        })
+
+        //是否进入房间
+        this.checkJoinRoom();
+
+        //更新用户信息
+        this.updatePlayerInfo();
+
+        //移动位置
+        this.maskNode.runAction(cc.repeatForever(cc.sequence([cc.moveTo(2, cc.v2(200, -300)), cc.delayTime(2), cc.callFunc(function () {
+            this.maskNode.x = -200;
+            this.maskNode.y = 300;
+        }.bind(this))])))
+
+
 
     }
 

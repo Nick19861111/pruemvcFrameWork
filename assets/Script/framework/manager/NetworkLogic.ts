@@ -100,7 +100,7 @@ export default class NetworkLogic {
             Gloab.MessageCallback.emitMessage(data.pushRouter, data);
         } else if (router === 'ServerDisconnection') {
             // 检测是否是系统主动断开连接
-            if (data.code === 1000 && !this.isManualCloseServerConnection) {
+            if (data.code === 1006 && !this.isManualCloseServerConnection) {
                 Gloab.DialogManager.removeLoadingCircle();
                 Gloab.DialogManager.addPopDialog("服务器主动断开连接，请稍后登录", function () {
                     cc.sys.localStorage.setItem("token", "");
