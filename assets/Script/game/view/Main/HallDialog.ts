@@ -163,8 +163,5 @@ export default class HallDialog extends cc.Component {
             case "record":
                 break;
         }
-
-        Gloab.DialogManager.addTipDialog("暂未开启，敬请期待");
     }
-
 }
