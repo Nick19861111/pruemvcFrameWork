@@ -21,4 +21,24 @@ export default class HallApi {
         }
         Gloab.NetworkManager.send(router, requestData, cbRouter);
     }
+
+    //----------------------------房间相关------------------------------
+    /**
+     * 创建房间相关操作
+     * @param gameRule      游戏规则
+     * @param gameRuleID    游戏规则id
+     * @param unionID       联盟id
+     * @param cbRouter      返回事件
+     */
+    public createRoomRequest(gameRule, gameRuleID, unionID, cbRouter:string="") {
+        let router = "game.unionHandler.createRoom";
+        let requestData = {
+            unionID: unionID,
+            gameRule: gameRule,
+            gameRuleID: gameRuleID
+        }
+        Gloab.NetworkManager.send(router, requestData, cbRouter || "CreateRoomResponse");
+    }
+
+    //------------------------------end--------------------------------
 }

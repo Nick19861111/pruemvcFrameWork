@@ -62,21 +62,21 @@ export default class CreateRoomDialog extends cc.Component {
     onLoad() {
         this.gameType = Gloab.Enum.gameType.PDK;
         this.szGameRule = {
-            bureau:         6,
-			minPlayerCount: 2,
-			maxPlayerCount: 6,
-			gameType:       Gloab.Enum.gameType.SZ,
-			gameFrameType:  SZProto.gameType.NONE,
-			roundType:      SZProto.roundType.ROUND10,
-			fangzuobi:      false, /* 防作弊 */
-			addScores:      [1], /* 加注分 */
-			maxScore:       4, /* 最大加注分 */
-			canTrust:       false,
-			canEnter:       false,
-			cuopai:         false,
-			canWatch:       false,
-			yuyin:          false,
-			baseScore:      1,
+            bureau: 6,
+            minPlayerCount: 2,
+            maxPlayerCount: 6,
+            gameType: Gloab.Enum.gameType.SZ,
+            gameFrameType: SZProto.gameType.NONE,
+            roundType: SZProto.roundType.ROUND10,
+            fangzuobi: false, /* 防作弊 */
+            addScores: [1], /* 加注分 */
+            maxScore: 4, /* 最大加注分 */
+            canTrust: false,
+            canEnter: false,
+            cuopai: false,
+            canWatch: false,
+            yuyin: false,
+            baseScore: 1,
 
         };//初始化所有规则
     }
@@ -125,10 +125,17 @@ export default class CreateRoomDialog extends cc.Component {
      * 创建房间的方法
      */
     createRoomFun() {
-        let gameRule = {};
+        let gameRule: any = {};
         if (this.gameType == Gloab.Enum.gameType.SZ) {
             console.log("点击了三张以后的创建");
-
+            gameRule = this.szGameRule;
         }
+
+        Gloab.DialogManager.addLoadingCircle();
+        gameRule.roomType = this.gameType;
+        if (!gameRule.payType) gameRule.payType = Gloab.Enum.roomPayType.AAZHIFU;
+        //实际支付需要计算钻石数量
+        //发送消息
+        Gloab.Api.hallApi.createRoomRequest(gameRule, null, 1);
     }
 }
