@@ -6,6 +6,7 @@
 //  - https://docs.cocos.com/creator/2.4/manual/en/scripting/life-cycle-callbacks.html
 
 import Gloab from "../../../Gloab";
+import SZProto from "../../sanzhang/SZProto";
 
 const { ccclass, property } = cc._decorator;
 
@@ -56,8 +57,28 @@ export default class CreateRoomDialog extends cc.Component {
 
     private gameType: number = -1;
 
+    private szGameRule: any = {};
+
     onLoad() {
         this.gameType = Gloab.Enum.gameType.PDK;
+        this.szGameRule = {
+            bureau:         6,
+			minPlayerCount: 2,
+			maxPlayerCount: 6,
+			gameType:       Gloab.Enum.gameType.SZ,
+			gameFrameType:  SZProto.gameType.NONE,
+			roundType:      SZProto.roundType.ROUND10,
+			fangzuobi:      false, /* 防作弊 */
+			addScores:      [1], /* 加注分 */
+			maxScore:       4, /* 最大加注分 */
+			canTrust:       false,
+			canEnter:       false,
+			cuopai:         false,
+			canWatch:       false,
+			yuyin:          false,
+			baseScore:      1,
+
+        };//初始化所有规则
     }
 
 
@@ -94,6 +115,20 @@ export default class CreateRoomDialog extends cc.Component {
             case "close":
                 Gloab.DialogManager.destroyDialog(this);
                 break;
+            case "createRoom":
+                this.createRoomFun();
+                break;
+        }
+    }
+
+    /**
+     * 创建房间的方法
+     */
+    createRoomFun() {
+        let gameRule = {};
+        if (this.gameType == Gloab.Enum.gameType.SZ) {
+            console.log("点击了三张以后的创建");
+
         }
     }
 }
