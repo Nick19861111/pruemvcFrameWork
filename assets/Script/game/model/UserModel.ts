@@ -1,3 +1,5 @@
+import Gloab from "../../Gloab";
+
 /**
  * 用户的数据模型
  */
@@ -10,6 +12,24 @@ export default class UserModel {
      */
     public init(data) {
         this.setProperties(data);
+        //事件监听
+        Gloab.MessageCallback.addListener("UpdateUserInfoPush", this);//更新对应的数据
+    }
+
+    /**
+     * 监听事件
+     * @param router 
+     * @param data 
+     */
+    messageCallbackHandler(router, msg) {
+        switch (router) {
+            case "UpdateUserInfoPush":
+                delete msg.pushRouter;
+                this.setProperties(msg);
+                Gloab.MessageCallback.emitMessage("UpdateUserInfoUI");
+                break
+        }
+
     }
 
     /**

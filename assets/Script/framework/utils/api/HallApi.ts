@@ -30,8 +30,8 @@ export default class HallApi {
      * @param unionID       联盟id
      * @param cbRouter      返回事件
      */
-    public createRoomRequest(gameRule, gameRuleID, unionID, cbRouter:string="") {
-        let router = "game.unionHandler.createRoom";
+    public createRoomRequest(gameRule, gameRuleID, unionID, cbRouter?: string) {
+        let router = "game.unionHandler.createRoom"; //这里对应的是服务器的处理的函数
         let requestData = {
             unionID: unionID,
             gameRule: gameRule,

@@ -103,9 +103,15 @@ export default class HallDialog extends cc.Component {
     messageCallbackHandler(router, data) {
         switch (router) {
             case "SelfEntryRoomPush":
+                //进入房间的操作发送进入游戏消息
+                Gloab.GameHelper.enterGame(data.gameType, function (err, gameInfo) {
+                    if (!err) {
+                        Gloab.DialogManager.destroyAllDialog([gameInfo.gameDialog]);//删除所有ui节点上的子对象
+                    }
+                }.bind(this));
                 break;
             case "UpdateUserInfoUI":
-                break;
+                console.log("收到更新用户ui信息");
             case "ReConnectSuccess":
                 console.log("服务器连接成功");
                 this.updatePlayerInfo()

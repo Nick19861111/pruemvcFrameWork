@@ -1,4 +1,5 @@
 import CodeInstance from "./framework/constant/Code";
+import Constant from "./framework/constant/Constant";
 import enumeration from "./framework/constant/enumeration";
 import AudioManager from "./framework/manager/AudioManager";
 import DialogManager from "./framework/manager/DialogManager";
@@ -8,6 +9,8 @@ import NetworkLogic from "./framework/manager/NetworkLogic";
 import NetworkManager from "./framework/manager/NetworkManager";
 import ConfigModel from "./framework/models/ConfigModel";
 import Api from "./framework/utils/Api";
+import CCHelper from "./framework/utils/CCHelper";
+import GameHelper from "./framework/utils/GameHelper";
 import LoginHelper from "./framework/utils/LoginHelper";
 import PlanformHelper from "./framework/utils/PlanformHelper";
 import utils from "./framework/utils/utils";
@@ -43,6 +46,12 @@ export default class Gloab {
     public static Enum: enumeration = null;
     //一些常用帮助类
     public static PlatformHelper: PlanformHelper = null;
+    //游戏的辅助类
+    public static GameHelper: GameHelper = null;
+    //常量
+    public static Constant: Constant = null;
+    //常见的助手
+    public static CCHelper:CCHelper = null;
 
     //初始化
     public static create() {
@@ -60,6 +69,9 @@ export default class Gloab {
         this.UserModel = new UserModel();
         this.Enum = new enumeration();
         this.PlatformHelper = new PlanformHelper();
+        this.GameHelper = new GameHelper();
+        this.Constant = new Constant();
+        this.CCHelper = new CCHelper();
     }
 
     public static init(rootNode: cc.Node) {
