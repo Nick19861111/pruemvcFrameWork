@@ -50,11 +50,30 @@ export default class utils {
     * @param num 数字
     * @returns 
     */
-   public formatNumberWithCommas(num: number): string {
-       const numStr = num.toString();
+    public formatNumberWithCommas(num: number): string {
+        const numStr = num.toString();
 
-       const formattedStr = numStr.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        const formattedStr = numStr.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-       return formattedStr;
-   }
+        return formattedStr;
+    }
+
+    private EARTH_RADIUS = 6378.137; //地球半径  
+    //将用角度表示的角转换为近似相等的用弧度表示的角 java Math.toRadians  
+    rad(d) {
+        return d * Math.PI / 180.0;
+    }
+
+    public getDistance(lng1, lat1, lng2, lat2) {
+        var radLat1 = this.rad(lat1);
+        var radLat2 = this.rad(lat2);
+        var a = radLat1 - radLat2;
+        var b = this.rad(lng1) - this.rad(lng2);
+        var s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2)
+            + Math.cos(radLat1) * Math.cos(radLat2)
+            * Math.pow(Math.sin(b / 2), 2)));
+        s = s * this.EARTH_RADIUS;
+        s = Math.round(s * 10000) / 10000;
+        return s;
+    }
 }

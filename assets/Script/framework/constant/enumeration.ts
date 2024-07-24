@@ -27,4 +27,19 @@ export default class enumeration {
         YINGJIAZHIFU: 2,            //一家支付
         WOZHIFU: 3,                 //我支付
     };
+
+    //房间解散原因
+    gameRoomDismissReason = {
+        NONE: 0,                     // 未知原因
+        BUREAU_FINISHED: 1,          // 完成所有局数
+        USER_DISMISS: 2,              // 用户解散
+        UNION_OWNER_DISMISS: 3,      // 盟主解散
+    };
+
+    //房间创建类型
+    roomCreatorType = {
+        NONE: 0,
+        USER_CREATE: 1,             // 玩家创建
+        UNION_CREATE: 2             // 联盟创建
+    };
 }

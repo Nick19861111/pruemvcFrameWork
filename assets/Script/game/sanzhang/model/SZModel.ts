@@ -1,5 +1,6 @@
 import RoomProto from "../../../framework/utils/api/RoomProto";
 import Gloab from "../../../Gloab";
+import SZProto from "../SZProto";
 
 /**
  * 三张模型类
@@ -34,6 +35,8 @@ export default class SZModel {
     private static myUid;
 
     private static myChairID;
+
+    private static roomDismissReason;
 
     public static init() {
         console.log("SZModel init");
@@ -124,12 +127,11 @@ export default class SZModel {
      * @param msg 
      */
     public static messageCallbackHandler(router, msg) {
-        if (router == "RoomMessagePush") {
-            if (msg.type == RoomProto.GET_ROOM_SCENE_INFO_PUSH) {
+        if (router === 'RoomMessagePush') {
+            if (msg.type === RoomProto.GET_ROOM_SCENE_INFO_PUSH) {
                 this.setEntryRoomData(msg.data);
             }
             else if (msg.type === RoomProto.OTHER_USER_ENTRY_ROOM_PUSH) {
-                //进入房间推送
                 if (!this.gameInited) { return; }
                 this.addUser(msg.data.roomUserInfo);
             }
@@ -141,22 +143,111 @@ export default class SZModel {
                 }
             }
             else if (msg.type === RoomProto.USER_READY_PUSH) {
-
+                if (!this.gameInited) { return; }
+                this.userReady(msg.data.chairID);
             }
             else if (msg.type === RoomProto.ASK_FOR_DISMISS_PUSH) {
-
+                if (!this.gameInited) { return; }
+                this.askForExitArr = msg.data.chairIDArr;
+                if (msg.data.chairIDArr.indexOf(false) != -1) {
+                    this.askForExitArr = null;
+                }
             }
             else if (msg.type === RoomProto.ROOM_DISMISS_PUSH) {
-
+                if (!this.gameInited) { return; }
+                this.askForExitArr = null;
+                this.roomDismissReason = msg.data.reason;
+                if (msg.data.reason != Gloab.Enum.gameRoomDismissReason.BUREAU_FINISHED) {
+                    this.onDestroy();
+                }
             }
             else if (msg.type === RoomProto.USER_CHANGE_SEAT_PUSH) {
-
+                if (!this.gameInited) { return; }
+                for (let user of this.roomUserInfoArr) {
+                    if (user.userInfo.uid == msg.data.uid) {
+                        user.chairID = msg.data.toChairID;
+                    }
+                }
             }
             else if (msg.type === RoomProto.ROOM_USER_INFO_CHANGE_PUSH) {
-
+                if (!this.gameInited) { return; }
+                for (let i = 0; i < this.roomUserInfoArr.length; ++i) {
+                    if (this.roomUserInfoArr[i].userInfo.uid == msg.data.changeInfo.uid) {
+                        for (let key in msg.data.changeInfo) {
+                            this.roomUserInfoArr[i].userInfo[key] = msg.data.changeInfo[key];
+                        }
+                    }
+                }
             }
             else if (msg.type === RoomProto.USER_OFF_LINE_PUSH) {
-
+                if (!this.gameInited) { return; }
+                let user = this.getUserByChairID(msg.data.chairID);
+                if (user) {
+                    user.userStatus |= RoomProto.userStatusEnum.OFFLINE;
+                }
+            }
+        }
+        else if (router === 'GameMessagePush') {
+            if (!this.gameInited) { return; }
+            if (msg.type === SZProto.GAME_BUREAU_PUSH) {
+                this.curBureau = msg.data.curBureau;
+            }
+            else if (msg.type === SZProto.GAME_ROUND_PUSH) {
+                this.round = msg.data.round;
+            }
+            else if (msg.type === SZProto.GAME_POUR_SCORE_PUSH) {
+                this.pourScore(msg.data.chairID, msg.data.score);
+            }
+            else if (msg.type === SZProto.GAME_LOOK_PUSH) {
+                if (msg.data.cards) {
+                    this.handCards[msg.data.chairID] = msg.data.cards;
+                }
+                this.lookCards[msg.data.chairID] = 1;
+                this.userStatusArray[msg.data.chairID] |= SZProto.userStatus.LOOK;
+            }
+            else if (msg.type === SZProto.GAME_RESULT_PUSH) {
+                this.result = msg.data.result;
+                this.handCards = this.result.handCards;
+                this.curScores = this.result.curScores;
+                this.tick = 0;
+            }
+            else if (msg.type === SZProto.GAME_STATUS_PUSH) {
+                this.tick = msg.data.tick;
+                this.gameStatus = msg.data.gameStatus;
+                this.gameStarted = true;
+                if (this.gameStatus == SZProto.gameStatus.NONE) {
+                    for (let user of this.roomUserInfoArr) {
+                        user.userStatus &= ~RoomProto.userStatusEnum.READY;
+                    }
+                    this.result = null;
+                    this.handCards = [null, null, null, null, null, null, null, null, null, null];
+                    this.pourScores = [null, null, null, null, null, null, null, null, null, null];
+                    this.lookCards = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+                    this.userStatusArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+                    this.round = 0;
+                }
+            }
+            else if (msg.type === SZProto.GAME_BANKER_PUSH) {
+                this.bankerChairID = msg.data.bankerChairID;
+            }
+            else if (msg.type === SZProto.GAME_SEND_CARDS_PUSH) {
+                this.handCards = msg.data.handCards;
+            }
+            else if (msg.type === SZProto.GAME_ABANDON_PUSH) {
+                this.loser.push(msg.data.chairID);
+                this.userStatusArray[msg.data.chairID] = msg.data.userStatus;
+            }
+            else if (msg.type === SZProto.GAME_COMPARE_PUSH) {
+                this.loser.push(msg.data.loseChairID);
+                this.userStatusArray[msg.data.loseChairID] |= SZProto.userStatus.LOSE;
+                this.userStatusArray[msg.data.winChairID] |= SZProto.userStatus.WIN;
+            }
+            else if (msg.type === SZProto.GAME_TURN_PUSH) {
+                this.curChairID = msg.data.curChairID;
+                this.curScore = msg.data.curScore;
+            }
+            else if (msg.type === SZProto.GAME_TRUST_PUSH) {
+                this.userTrustArray[msg.data.chairID] = msg.data.trust;
             }
         }
     }
@@ -214,7 +305,68 @@ export default class SZModel {
         return this.curChairID;
     };
 
-    private static addUser(user) {
+    public static pourScore = function (chairID, score) {
+        if (!this.pourScores[chairID]) {
+            this.pourScores[chairID] = [];
+        }
+        this.pourScores[chairID].push(score);
+    };
+
+    public static userReady = function (chairID) {
+        let user = this.getUserByChairID(chairID);
+        if (user) {
+            user.userStatus |= RoomProto.userStatusEnum.READY;
+            user.userStatus |= RoomProto.userStatusEnum.DISMISS;
+        }
+    };
+
+    public static getGameRule = function () {
+        return this.gameRule;
+    };
+
+    public static getGameStatus = function () {
+        return this.gameStatus;
+    };
+
+    public static getTick = function () {
+        return this.tick;
+    };
+
+    public static subTick = function (dt) {
+        this.tick -= dt;
+    };
+
+    public static setTick = function (tick) {
+        this.tick = tick;
+    };
+
+    public static getBankerChairID = function () {
+        return this.bankerChairID;
+    };
+
+    public static getChairCount = function () {
+        return this.gameRule.maxPlayerCount;
+    };
+
+    public static getMyChairID = function () {
+        for (let user of this.roomUserInfoArr) {
+            if (user.userInfo.uid == this.myUid) {
+                this.myChairID = user.chairID;
+            }
+        }
+        return this.myChairID;
+    };
+
+    public static getUserByChairID = function (chairID) {
+        for (let user of this.roomUserInfoArr) {
+            if (user.chairID == chairID) {
+                return user;
+            }
+        }
+        return null;
+    };
+
+    public static addUser = function (user) {
         for (var i = 0; i < this.roomUserInfoArr.length; ++i) {
             if (this.roomUserInfoArr[i].chairID === user.chairID) {
                 this.roomUserInfoArr.splice(i, 1);
@@ -223,11 +375,7 @@ export default class SZModel {
         this.roomUserInfoArr.push(user);
     };
 
-    /**
-     * 删除椅子上的用户信息
-     * @param chairID 
-     */
-    private static delUser(chairID) {
+    public static delUser = function (chairID) {
         for (let i = 0; i < this.roomUserInfoArr.length; ++i) {
             if (this.roomUserInfoArr[i].chairID == chairID) {
                 this.roomUserInfoArr.splice(i, 1);
@@ -236,16 +384,108 @@ export default class SZModel {
         }
     };
 
-    /**
-     * 获得我当前的作为信息
-     * @returns 
-     */
-    private static getMyChairID() {
+    public static getPourScoreByChairID = function (chairID) {
+        let scores = 0;
+        if (!this.pourScores[chairID]) {
+            this.pourScores[chairID] = [];
+        }
+        for (let score of this.pourScores[chairID]) {
+            scores += score;
+        }
+        return scores;
+    };
+
+    public static getPourScores = function () {
+        return this.pourScores;
+    };
+
+    public static getHandCardsByChairID = function (chairID) {
+        return this.handCards[chairID] || null;
+    };
+
+    public static getResult = function () {
+        return this.result;
+    };
+
+    public static getHandCards = function () {
+        return this.handCards;
+    };
+
+    public static getIsPlayingByChairID = function (chairID) {
+        let user = this.getUserByChairID(chairID);
+        if (user && ((user.userStatus & RoomProto.userStatusEnum.READY) > 0 || (user.userStatus & RoomProto.userStatusEnum.PLAYING) > 0)) {
+            return true;
+        }
+        return false;
+    };
+
+    public static getPlayingUserCount = function () {
+        let count = 0;
         for (let user of this.roomUserInfoArr) {
-            if (user.userInfo.uid == this.myUid) {
-                this.myChairID = user.chairID;
+            if (user && ((user.userStatus & RoomProto.userStatusEnum.READY) > 0 || (user.userStatus & RoomProto.userStatusEnum.PLAYING) > 0)) {
+                ++count;
             }
         }
-        return this.myChairID;
+        return count;
+    };
+
+    public static getUserStatusByChairID = function (chairID) {
+        return this.userStatusArray[chairID];
+    };
+
+    public static getCanCompareChairIDs = function () {
+        let array = [];
+        for (let user of this.roomUserInfoArr) {
+            let userStatus = this.userStatusArray[user.chairID];
+            if (((user.userStatus & RoomProto.userStatusEnum.READY) > 0 || (user.userStatus & RoomProto.userStatusEnum.PLAYING) > 0)) {
+                if ((userStatus & SZProto.userStatus.ABANDON) == 0 && (userStatus & SZProto.userStatus.LOSE) == 0) {
+                    array.push(user.chairID);
+                }
+            }
+        }
+        return array;
+    };
+
+    public static getTrustByChairID = function (chairID) {
+        return this.userTrustArray[chairID];
+    };
+
+    public static getAddScores = function () {
+        return this.gameRule.addScores;
+    };
+
+    public static getCurScoreByChairID = function (chairID) {
+        let user = this.getUserByChairID(chairID);
+        if (!user) { return 0; }
+        if (this.isUnionCreate()) {
+            return Math.floor(user.userInfo.score - this.getPourScoreByChairID(chairID));
+        }
+        else {
+            return Math.floor(user.userInfo.score);
+        }
+    };
+
+    public static getRoomCreator = function () {
+        return this.roomCreatorInfo;
+    };
+
+    public static isUnionCreate = function () {
+        return (this.roomCreatorInfo && this.roomCreatorInfo.creatorType == Gloab.Enum.roomCreatorType.UNION_CREATE);
+    };
+
+    public static getLookCardByChairID = function (chairID) {
+        return this.lookCards[chairID];
+    };
+
+    public static getMyUid = function () {
+        return this.myUid;
+    };
+
+    public static getRoomDismissReason = function () {
+        return this.roomDismissReason;
+    };
+
+    public static isDismissing = function () {
+        return !!this.askForExitArr;
     };
 }
