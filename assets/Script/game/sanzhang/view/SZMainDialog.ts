@@ -8,6 +8,7 @@
 import RoomApi from "../../../framework/utils/api/RoomApi";
 import RoomProto from "../../../framework/utils/api/RoomProto";
 import Gloab from "../../../Gloab";
+import SZModel from "../model/SZModel";
 
 const { ccclass, property } = cc._decorator;
 
@@ -47,6 +48,8 @@ export default class SZMainDialog extends cc.Component {
     onLoad() {
         this.headNodeArray = [];
         this.cardsNodeArray = [];
+        //数据保存
+        SZModel.init();
         //获取场景数据
         this.scheduleOnce(function () {
             RoomApi.roomMessageNotify(RoomProto.getRoomSceneInfoNotify());
@@ -61,13 +64,16 @@ export default class SZMainDialog extends cc.Component {
         Gloab.MessageCallback.removeListener("RoomMessagePush", this);
     }
 
+
+
     //监听事件
     messageCallbackHandler(router, msg) {
         if (router == "RoomMessagePush") {
             //收到消息
             console.log("收到进入房间消息");
-            if (msg.type == RoomProto.USER_LEAVE_ROOM_RESPONSE) {
-
+            if (msg.type == RoomProto.GET_ROOM_SCENE_INFO_PUSH) {
+                //进入房间信息
+                this.gameInit();
             }
             //离开房间
             else if (msg.type == RoomProto.USER_LEAVE_ROOM_PUSH) {
@@ -79,5 +85,17 @@ export default class SZMainDialog extends cc.Component {
     //隐藏当前的头像
     hideHeadNode(chairID) {
         console.log("用户离开头像回复");
+    }
+
+    //游戏初始化和短线重连
+    gameInit() {
+        console.log("szMainDialog gameinit");
+        //设置头像
+
+        this.roomIdLabel.string = '房号:' + SZModel.getRoomID();
+        this.bureauLabel.string = '局数:' + SZModel.getCurBureau() + "/" + SZModel.getMaxBureau();
+        this.roundLabel.string = '轮数:' + SZModel.getCurRound() + "/" + SZModel.getMaxRound();
+
+        //查找椅子
     }
 }
