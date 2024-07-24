@@ -12,5 +12,3 @@ export class GameRoot extends cc.Component {
         new ApplicationFacade(this.node); 
     }
 }
-
-
