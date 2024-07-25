@@ -83,11 +83,6 @@ export default class SZMainDialog extends cc.Component {
         }
     }
 
-    //隐藏当前的头像
-    hideHeadNode(chairID) {
-        console.log("用户离开头像回复");
-    }
-
     //游戏初始化和短线重连
     gameInit() {
         console.log("szMainDialog gameinit");
@@ -163,8 +158,10 @@ export default class SZMainDialog extends cc.Component {
      */
     setHeadAndCard() {
         let chairCount = SZModel.getGameRule().maxPlayerCount;
+        //头像的具体位置
         let headPosArray = [cc.v2(-586, -293), cc.v2(606, -40), cc.v2(561, 141), cc.v2(199, 261), cc.v2(-37, 303), cc.v2(-261, 262), cc.v2(-568, 141), cc.v2(-605, -37)];
         let cardPosArray = [cc.v2(41, -276), cc.v2(416, -88), cc.v2(373, 92), cc.v2(166, 112), cc.v2(-42, 154), cc.v2(-275, 116), cc.v2(-470, 92), cc.v2(-508, -85)];
+        //end
         let choosedArray = [1, 2, 3, 4, 5, 6, 7, 8];
         if (chairCount == 6) {
             headPosArray = [cc.v2(-586, -293), cc.v2(606, -14), cc.v2(310, 248), cc.v2(-37, 303), cc.v2(-359, 249), cc.v2(-605, -11)];
@@ -274,5 +271,39 @@ export default class SZMainDialog extends cc.Component {
             };
             Gloab.DialogManager.createDialog('Chat/HeadDetail', params);
         }, this);
+    }
+
+    /**
+     * 根据座位号进行id显示
+     * @param chairID 
+     */
+    showHeadNode(chairID) {
+
+    }
+
+    /**
+     * 根据座位号进行隐藏
+     * @param chairID 
+     */
+    hideHeadNode(chairID) {
+        let isMyHeadId = SZModel.getMyChairID();
+        if (chairID == isMyHeadId) {
+            this.enterHall();
+        }
+    }
+
+    enterHall() {
+        //没有房间数据的时候哦则什么都不做
+        if (!SZModel.getGameInited()) { return; };
+        let roomCreartorInfo = SZModel.getRoomCreator();
+        Gloab.DialogManager.destroyDialog("Game/Sanzhang/SZMainDialog");
+        if (roomCreartorInfo.creatorType == Gloab.Enum.roomCreatorType.UNION_CREATE) {
+            Gloab.DialogManager.createDialog("UI/Union?UnionMain/UnionMainlog", { unionID: roomCreartorInfo.unionID });
+        }
+        else {
+            Gloab.DialogManager.createDialog("UI/Hall/HallDialog", null, function () {
+                Gloab.DialogManager.removeLoadingCircle();
+            })
+        }
     }
 }
