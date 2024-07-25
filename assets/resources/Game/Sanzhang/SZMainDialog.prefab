@@ -32117,7 +32117,7 @@
       "__id__": 1
     },
     "component": "",
-    "_componentId": "49786QJinRNiawe1oMeqnot",
+    "_componentId": "053d9zvcypKYZhYgLYYkANY",
     "handler": "onSwitchClick",
     "customEventData": ""
   },
@@ -32429,7 +32429,7 @@
       "__id__": 1
     },
     "component": "",
-    "_componentId": "49786QJinRNiawe1oMeqnot",
+    "_componentId": "053d9zvcypKYZhYgLYYkANY",
     "handler": "onRefrush",
     "customEventData": ""
   },
@@ -32809,7 +32809,7 @@
       "__id__": 1
     },
     "component": "",
-    "_componentId": "49786QJinRNiawe1oMeqnot",
+    "_componentId": "053d9zvcypKYZhYgLYYkANY",
     "handler": "onTrustClick",
     "customEventData": ""
   },
@@ -33119,7 +33119,7 @@
       "__id__": 1
     },
     "component": "",
-    "_componentId": "49786QJinRNiawe1oMeqnot",
+    "_componentId": "053d9zvcypKYZhYgLYYkANY",
     "handler": "onReview",
     "customEventData": ""
   },
@@ -35960,7 +35960,7 @@
       "__id__": 1
     },
     "component": "",
-    "_componentId": "49786QJinRNiawe1oMeqnot",
+    "_componentId": "053d9zvcypKYZhYgLYYkANY",
     "handler": "onExitClick",
     "customEventData": "backhall"
   },
@@ -42080,8 +42080,6 @@
       "__id__": 996
     },
     "_enabled": true,
-    "label": null,
-    "text": "hello",
     "_id": ""
   },
   {
@@ -52769,8 +52767,6 @@
       "__id__": 1237
     },
     "_enabled": true,
-    "label": null,
-    "text": "hello",
     "_id": ""
   },
   {
@@ -53079,7 +53075,7 @@
       "__id__": 1
     },
     "component": "",
-    "_componentId": "49786QJinRNiawe1oMeqnot",
+    "_componentId": "053d9zvcypKYZhYgLYYkANY",
     "handler": "onVoice",
     "customEventData": ""
   },

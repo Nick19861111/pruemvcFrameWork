@@ -306,4 +306,70 @@ export default class SZMainDialog extends cc.Component {
             })
         }
     }
+
+    //==============================点击按钮部分================================
+
+    //点击发送语音
+    onVoice() {
+        if (!SZModel.getGameInited()) { return; };
+        Gloab.SoundMgr.playCommonSoundClickButton();
+        console.log("点击语音部分");
+    }
+
+    //点击发送聊天语音（固有的）
+    onChat(fromChairID, toChairID, msg) {
+        if (!SZModel.getGameInited()) { return; };
+        //todo 聊天操作
+        console.log("点击了聊天");
+    }
+
+    //回看
+    onReview() {
+        if (!SZModel.getGameInited()) { return; };
+        Gloab.SoundMgr.playCommonSoundClickButton();
+        console.log("点击了会看");
+    }
+
+    //刷新
+    onRefrush() {
+        if (!SZModel.getGameInited()) { return; };
+        Gloab.SoundMgr.playCommonSoundClickButton();
+    }
+
+    //点击了设置按钮
+    onSwitchClick() {
+        if (!SZModel.getGameInited()) { return; };
+        Gloab.SoundMgr.playCommonSoundClickButton();
+    }
+
+    //托管
+    onTrustClick() {
+        if (!SZModel.getGameInited()) { return; };
+        Gloab.SoundMgr.playCommonSoundClickButton();
+    }
+
+    //返回大厅
+    onExitClick(event, params) {
+        if (!SZModel.getGameInited()) { return; };
+        Gloab.SoundMgr.playCommonSoundClickButton();
+        if (params != "backhall") {
+            this.onSwitchClick();
+        }
+        let user = SZModel.getUserByChairID(SZModel.getMyChairID());
+        if (!SZModel.getGameStatus() || (user.userStatus & RoomProto.userStatusEnum.DISMISS) == 0 || user.chairID >= SZModel.getChairCount()) {
+            //我还没有准备状态
+            Gloab.DialogManager.addPopDialog("确认退出游戏?", function () {
+                //发送消息要拖出
+                Gloab.DialogManager.addLoadingCircle();
+            }, function () { });
+        }
+        else {
+            Gloab.DialogManager.addPopDialog("是否确定要发出解散申请？", function () {
+                //发送解散的消息
+                Gloab.DialogManager.addLoadingCircle();
+            }, function () { })
+        }
+    }
+
+    //========================================================================
 }
