@@ -48,7 +48,7 @@ export default class HallApi {
      * @param cbFail 
      */
     public joinRoomRequest(joinRoomID, cbRouter?, cbFail?) {
-        let router = "game.gameHandler.joinRoom";
+        let router = "game.unionHandler.joinRoom";
         let requestData = {
             roomID: joinRoomID
         }
