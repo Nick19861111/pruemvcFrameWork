@@ -311,47 +311,41 @@ export default class SZMainDialog extends cc.Component {
 
     //点击发送语音
     onVoice() {
-        if (!SZModel.getGameInited()) { return; };
-        Gloab.SoundMgr.playCommonSoundClickButton();
+        this.checkButton();
         console.log("点击语音部分");
     }
 
     //点击发送聊天语音（固有的）
     onChat(fromChairID, toChairID, msg) {
-        if (!SZModel.getGameInited()) { return; };
+        this.checkButton();
         //todo 聊天操作
         console.log("点击了聊天");
     }
 
     //回看
     onReview() {
-        if (!SZModel.getGameInited()) { return; };
-        Gloab.SoundMgr.playCommonSoundClickButton();
+        this.checkButton();
         console.log("点击了会看");
     }
 
     //刷新
     onRefrush() {
-        if (!SZModel.getGameInited()) { return; };
-        Gloab.SoundMgr.playCommonSoundClickButton();
+        this.checkButton();
     }
 
     //点击了设置按钮
     onSwitchClick() {
-        if (!SZModel.getGameInited()) { return; };
-        Gloab.SoundMgr.playCommonSoundClickButton();
+        this.checkButton();
     }
 
     //托管
     onTrustClick() {
-        if (!SZModel.getGameInited()) { return; };
-        Gloab.SoundMgr.playCommonSoundClickButton();
+        this.checkButton();
     }
 
     //返回大厅
     onExitClick(event, params) {
-        if (!SZModel.getGameInited()) { return; };
-        Gloab.SoundMgr.playCommonSoundClickButton();
+        this.checkButton();
         if (params != "backhall") {
             this.onSwitchClick();
         }
@@ -371,5 +365,17 @@ export default class SZMainDialog extends cc.Component {
         }
     }
 
+    //准备开始游戏
+    onReadyClick(){
+        if (!SZModel.getGameInited()) { return; };
+        Gloab.SoundMgr.playCommonSoundClickButton();
+    }
+
     //========================================================================
+
+
+    private checkButton(){
+        if (!SZModel.getGameInited()) { return; };
+        Gloab.SoundMgr.playCommonSoundClickButton();
+    }
 }
