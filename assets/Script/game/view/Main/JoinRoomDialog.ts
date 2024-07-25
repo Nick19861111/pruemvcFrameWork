@@ -83,6 +83,7 @@ export default class JoinRoomDialog extends cc.Component {
                 //加载
                 Gloab.DialogManager.addLoadingCircle();
                 //发送消息给服务器
+                Gloab.Api.hallApi.joinRoomRequest(roomID);
                 //关闭当前的界面
                 Gloab.DialogManager.destroyDialog(this);
                 break;

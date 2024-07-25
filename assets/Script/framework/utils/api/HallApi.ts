@@ -40,5 +40,20 @@ export default class HallApi {
         Gloab.NetworkManager.send(router, requestData, cbRouter || "CreateRoomResponse");
     }
 
+
+    /**
+     * 加入房间
+     * @param joinRoomID 
+     * @param cbRouter 
+     * @param cbFail 
+     */
+    public joinRoomRequest(joinRoomID, cbRouter?, cbFail?) {
+        let router = "game.gameHandler.joinRoom";
+        let requestData = {
+            roomID: joinRoomID
+        }
+        Gloab.NetworkManager.send(router, requestData, cbRouter || 'JoinRoomResponse', cbFail);
+    }
+
     //------------------------------end--------------------------------
 }

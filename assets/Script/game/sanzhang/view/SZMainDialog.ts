@@ -17,6 +17,9 @@ const { ccclass, property } = cc._decorator;
  * 三张游戏的主界面
  */
 
+const RoomMessageRouter = "game.gameHandler.roomMessageNotify";
+const GameMessageRouter = "game.gameHandler.gameMessageNotify";
+
 @ccclass
 export default class SZMainDialog extends cc.Component {
 
@@ -80,6 +83,18 @@ export default class SZMainDialog extends cc.Component {
             else if (msg.type == RoomProto.USER_LEAVE_ROOM_PUSH) {
                 this.hideHeadNode(msg.data.roomUserInfo.chairID);
             }
+            //用户准备推送
+            else if (msg.type == RoomProto.USER_READY_PUSH) {
+                this.userReadyPush(msg.data.chairID);
+            }
+        }
+    }
+
+    //玩家准备推送
+    userReadyPush(chairID) {
+        if (chairID == SZModel.getMyChairID()) {
+            this.readyButton.active = false;
+            //不修改用户的当前状态，可能是在进入游戏的时候在修改状态
         }
     }
 
@@ -366,15 +381,17 @@ export default class SZMainDialog extends cc.Component {
     }
 
     //准备开始游戏
-    onReadyClick(){
+    onReadyClick() {
         if (!SZModel.getGameInited()) { return; };
         Gloab.SoundMgr.playCommonSoundClickButton();
+        //发送消息给服务器
+        Gloab.NetworkManager.notify(RoomMessageRouter, RoomProto.userReadyNotify(true));
     }
 
     //========================================================================
 
 
-    private checkButton(){
+    private checkButton() {
         if (!SZModel.getGameInited()) { return; };
         Gloab.SoundMgr.playCommonSoundClickButton();
     }
