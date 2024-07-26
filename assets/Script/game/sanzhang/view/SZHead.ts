@@ -8,6 +8,7 @@
 import RoomProto from "../../../framework/utils/api/RoomProto";
 import Gloab from "../../../Gloab";
 import SZModel from "../model/SZModel";
+import SZProto from "../SZProto";
 
 const { ccclass, property } = cc._decorator;
 
@@ -58,6 +59,230 @@ export default class SZHead extends cc.Component {
         Gloab.MessageCallback.addListener('RoomMessagePush', this);
         Gloab.MessageCallback.addListener('GameMessagePush', this);
         Gloab.MessageCallback.addListener('ReConnectSuccess', this);
+    }
+
+    onDestroy() {
+        Gloab.MessageCallback.removeListener('RoomMessagePush', this);
+        Gloab.MessageCallback.removeListener('GameMessagePush', this);
+        Gloab.MessageCallback.removeListener('ReConnectSuccess', this);
+    }
+
+    /**
+     * 获得消息的操作
+     * @param router 
+     * @param msg 
+     */
+    messageCallbackHandler(router, msg) {
+        if (!SZModel.getGameInited()) { return; }
+        if (router === 'RoomMessagePush') {
+            if (msg.type === RoomProto.GET_ROOM_SCENE_INFO_PUSH) {
+                this.gameInit();
+            }
+            else if (msg.type === RoomProto.USER_READY_PUSH) {
+                if (msg.data.chairID == SZModel.getMyChairID() && SZModel.getCurBureau() == 0) {
+                    this.gameInit();
+                }
+                if (this.node.active && msg.data.chairID == this.getChairID()) {
+                    this.readyNode.active = true;
+                    this.scoreNode.active = false;
+                }
+                if (this.node.active && msg.data.chairID == SZModel.getMyChairID()) {
+                    let user = SZModel.getUserByChairID(this.getChairID());
+                    if (user) {
+                        this.scoreNode.active = false;
+                        this.readyNode.active = (user.userStatus & RoomProto.userStatusEnum.READY);
+                        this.bankerNode.active = (SZModel.getBankerChairID() == this.getChairID());
+                        this.winScoreNode.active = false;
+                        this.loseScoreNode.active = false;
+                    }
+                }
+            }
+            else if (msg.type === RoomProto.OTHER_USER_ENTRY_ROOM_PUSH) {
+                if (msg.data.roomUserInfo.chairID == this.getChairID()) {
+                    this.gameInit();
+                }
+            }
+            else if (msg.type === RoomProto.USER_LEAVE_ROOM_PUSH) {
+                if (msg.data.roomUserInfo.chairID == this.getChairID()) {
+                    this.node.active = false;
+                }
+            }
+            else if (msg.type === RoomProto.USER_CHANGE_SEAT_PUSH) {
+                if (SZModel.getCurBureau() == 0) {
+                    this.gameInit();
+                }
+                else {
+                    if (SZModel.getMyUid() != msg.data.uid) {
+                        if (this.getChairID() == msg.data.fromChairID || this.getChairID() == msg.data.toChairID) {
+                            this.gameInit();
+                        }
+                    }
+                    else {
+                        this.gameInit();
+                    }
+                }
+            }
+            else if (msg.type === RoomProto.ROOM_USER_INFO_CHANGE_PUSH) {
+                let user = SZModel.getUserByChairID(this.getChairID());
+                if (this.node.active && user) {
+                    /* this.idLabel.string = Math.floor(user.userInfo.score); */
+                    this.idLabel.string = SZModel.getCurScoreByChairID(this.getChairID());
+                }
+            }
+            else if (msg.type === RoomProto.USER_OFF_LINE_PUSH) {
+                if (msg.data.chairID == this.getChairID()) {
+                    cc.find('offline', this.node).active = true;
+                }
+            }
+        }
+        else if (router === 'GameMessagePush') {
+            if (msg.type === SZProto.GAME_BANKER_PUSH) {
+                this.setBanker();
+            }
+            else if (msg.type === SZProto.GAME_POUR_SCORE_PUSH) {
+                if (msg.data.chairID == this.getChairID()) {
+                    this.setPourScore(msg.data.chairScore);
+                    this.idLabel.string = SZModel.getCurScoreByChairID(this.getChairID());
+                }
+            }
+            else if (msg.type === SZProto.GAME_STATUS_PUSH) {
+                if (msg.data.gameStatus != SZProto.gameStatus.NONE) {
+                    this.readyNode.active = false;
+                }
+                else {
+                    this.idLabel.string = SZModel.getCurScoreByChairID(this.getChairID());
+                }
+                if (msg.data.gameStatus == SZProto.gameStatus.SEND_CARDS) {
+                    let user = SZModel.getUserByChairID(this.getChairID());
+                    if (user) {
+                        this.scoreNode.active = false;
+                        /* this.readyNode.active = (user.userStatus&RoomProto.userStatusEnum.READY);  */
+                        this.readyNode.active = false;
+                        this.bankerNode.active = (SZModel.getBankerChairID() == this.getChairID());
+                        this.winScoreNode.active = false;
+                        this.loseScoreNode.active = false;
+                    }
+                }
+                if (SZModel.getGameStatus() == SZProto.gameStatus.POUR_SCORE && this.getChairID() == SZModel.getCurChairID()) {
+                    this.light.active = true;
+                }
+                else {
+                    this.light.active = false;
+                }
+            }
+            else if (msg.type === SZProto.GAME_RESULT_PUSH) {
+                if (SZModel.getUserByChairID(this.getChairID())) {
+                    this.showResultScore(true);
+                    this.idLabel.string = SZModel.getCurScoreByChairID(this.getChairID());
+                }
+            }
+            else if (msg.type === SZProto.GAME_CHAT_PUSH) {
+                //this.gameChat(msg.data);
+            }
+            else if (msg.type === SZProto.GAME_TURN_PUSH) {
+                if (SZModel.getGameStatus() == SZProto.gameStatus.POUR_SCORE && this.getChairID() == SZModel.getCurChairID()) {
+                    this.light.active = true;
+                }
+                else {
+                    this.light.active = false;
+                }
+            }
+        }
+    }
+
+    setBanker() {
+        let is_banker = (SZModel.getBankerChairID() == this.getChairID());
+        this.bankerNode.active = is_banker;
+    }
+
+    /**
+     * 头像的初始化
+     */
+    gameInit() {
+        console.log("SZHead gameInit");
+        if (typeof (this.index) != 'number') { return; } /* 未使用，等待销毁 */
+        this.node.active = true;
+        let user = SZModel.getUserByChairID(this.getChairID());
+        //判断作为是否存在是的话就吧数据初始化
+        if (!user) {
+            let ready = (SZModel.getUserByChairID(SZModel.getMyChairID()).userStatus & RoomProto.userStatusEnum.READY);
+            if ((SZModel.getCurBureau() == 0 && !ready) || (SZModel.getMyChairID() >= SZModel.getChairCount() && SZModel.getGameRule().canEnter)) {
+                this.showSeat();
+            }
+            else {
+                this.hideSeat();
+                this.node.active = false;
+            }
+            return;
+        }
+        else {
+            this.hideSeat();
+        }
+
+        //复制相关的操作
+        this.nameLabel.string = user.userInfo.nickname;
+        Gloab.CCHelper.updateSpriteFrame(user.userInfo.avatar, this.headSprite);
+        this.idLabel.string = SZModel.getCurScoreByChairID(this.getChairID());
+        let is_creator = (SZModel.getRoomCreatorChairID() == this.getChairID());
+        this.fangzhuNode.active = is_creator; //房主的操作
+        this.readyNode.active = (user.userStatus & RoomProto.userStatusEnum.READY);
+        this.bankerNode.active = (this.getChairID() == SZModel.getBankerChairID());
+        let score = SZModel.getPourScoreByChairID(this.getChairID());
+        this.setPourScore(score);
+        this.showResultScore();
+        cc.find('offline', this.node).active = (user.userStatus & RoomProto.userStatusEnum.OFFLINE) > 0;
+        if (SZModel.getGameStatus() == SZProto.gameStatus.POUR_SCORE && this.getChairID() == SZModel.getCurChairID()) {
+            this.light.active = true;
+        }
+        else {
+            this.light.active = false;
+        }
+    }
+
+    showResultScore(animal?) {
+        this.winScoreNode.active = false;
+        this.loseScoreNode.active = false;
+        let result = SZModel.getResult();
+        if (result) {
+            let score = Math.floor(result.winScores[this.getChairID()]);
+            if (score > 0) {
+                this.winScoreNode.active = true;
+                this.winScoreNode.getComponent(cc.Label).string = '+' + Math.floor(score);
+                if (animal) {
+                    this.winScoreNode.x = -50;
+                    this.winScoreNode.runAction(cc.moveTo(0.2, cc.v2(0, 22)).easing(cc.easeIn(3.0)));
+                }
+            }
+            else if (score < 0) {
+                this.loseScoreNode.active = true;
+                this.loseScoreNode.getComponent(cc.Label).string = '' + Math.floor(score);
+                if (animal) {
+                    this.loseScoreNode.x = -50;
+                    this.loseScoreNode.runAction(cc.moveTo(0.2, cc.v2(0, 22)).easing(cc.easeIn(3.0)));
+                }
+            }
+            else if (result.winners.indexOf(this.getChairID()) != -1) {
+                this.winScoreNode.active = true;
+                this.winScoreNode.getComponent(cc.Label).string = '+' + Math.floor(score);
+                if (animal) {
+                    this.winScoreNode.x = -50;
+                    this.winScoreNode.runAction(cc.moveTo(0.2, cc.v2(0, 22)).easing(cc.easeIn(3.0)));
+                }
+            }
+        }
+    }
+
+    /*
+     * 设置下分
+     */
+    setPourScore(score) {
+        if (score == 0 || score == null) {
+            this.scoreNode.active = false;
+        }
+        else {
+            this.scoreLabel.string = Math.floor(score);
+            this.scoreNode.active = true;
+        }
     }
 
     showSeat() {
