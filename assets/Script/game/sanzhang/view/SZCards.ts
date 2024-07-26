@@ -5,6 +5,7 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/2.4/manual/en/scripting/life-cycle-callbacks.html
 
+import RoomProto from "../../../framework/utils/api/RoomProto";
 import Gloab from "../../../Gloab";
 import SZLogic from "../model/SZLogic";
 import SZModel from "../model/SZModel";
@@ -55,6 +56,13 @@ export default class SZCards extends cc.Component {
         Gloab.MessageCallback.addListener('GameMessagePush', this);
         Gloab.MessageCallback.addListener('ReConnectSuccess', this);
         Gloab.MessageCallback.addListener('UpdateGameCardBg', this);
+    }
+
+    protected onDestroy(): void {
+        Gloab.MessageCallback.removeListener('RoomMessagePush', this);
+        Gloab.MessageCallback.removeListener('GameMessagePush', this);
+        Gloab.MessageCallback.removeListener('ReConnectSuccess', this);
+        Gloab.MessageCallback.removeListener('UpdateGameCardBg', this);
     }
 
     setIndex(index) {
@@ -218,5 +226,84 @@ export default class SZCards extends cc.Component {
         }
     }
 
+    messageCallbackHandler(router, msg) {
+        if (!SZModel.getGameInited()) { return; };
+        if (router === 'RoomMessagePush') {
+            if (msg.type === RoomProto.GET_ROOM_SCENE_INFO_PUSH) {
+                this.gameInit();
+            }
+            else if (msg.type === RoomProto.USER_LEAVE_ROOM_RESPONSE) {
+                /* if(msg.data.chairID == this.getChairID()) {
+                    this.node.active = false;
+                } */
+            }
+            else if (msg.type === RoomProto.OTHER_USER_ENTRY_ROOM_PUSH) {
+                if (msg.data.roomUserInfo.chairID == this.getChairID()) {
+                    this.gameInit();
+                }
+            }
+            else if (msg.type === RoomProto.USER_LEAVE_ROOM_PUSH) {
+                if (msg.data.roomUserInfo.chairID == this.getChairID()) {
+                    this.node.active = false;
+                }
+            }
+            else if (msg.type === RoomProto.USER_CHANGE_SEAT_PUSH) {
+                this.gameInit();
+            }
+            else if (msg.type === RoomProto.USER_READY_PUSH) {
+                if (msg.data.chairID == SZModel.getMyChairID()) {
+                    this.cardsNode.active = false;
+                    this.cardTypeNode.active = false;
+                }
+            }
+        }
+        else if (router === 'GameMessagePush') {
+            if (msg.type === SZProto.GAME_LOOK_PUSH) {
+                if (this.getChairID() == msg.data.chairID) {
+                    if (!msg.data.cuopai) {
+                        this.sendCards();
+                        this.showType(true);
+                        this.updateStateSprite();
+                    }
+                    else {
+                        this.showTwoCards();
+                    }
+                }
+            }
+            else if (msg.type === SZProto.GAME_SEND_CARDS_PUSH) {
+                this.sendCards(true);
+            }
+            else if (msg.type === SZProto.GAME_STATUS_PUSH) {
+                if (msg.data.gameStatus == SZProto.gameStatus.SEND_CARDS) {
+                    this.cardsNode.active = false;
+                    this.cardTypeNode.active = false;
+                }
+            }
+            else if (msg.type === SZProto.GAME_ABANDON_PUSH) {
+                if (msg.data.chairID == this.getChairID()) {
+                    this.updateStateSprite();
+                }
+            }
+            else if (msg.type === SZProto.GAME_COMPARE_PUSH) {
+                if (msg.data.loseChairID == this.getChairID()) {
+                    this.updateStateSprite();
+                }
+            }
+            else if (msg.type === SZProto.GAME_RESULT_PUSH) {
+                this.sendCards();
+                this.showType(true);
+            }
+        }
+        else if (router === 'UpdateGameCardBg') {
+            this.sendCards();
+        }
+    }
 
+    showTwoCards() {
+        let cards = SZModel.getHandCardsByChairID(this.getChairID());
+        if (cards == null) { return; }
+        for (let i = 0; i < this.cardsNodeArray.length - 1; ++i) {
+            Gloab.CCHelper.updateSpriteFrame('Game/Cards/' + cards[i], this.cardsNodeArray[i].getComponent(cc.Sprite));
+        }
+    }
 }

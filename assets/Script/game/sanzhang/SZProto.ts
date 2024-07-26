@@ -110,7 +110,7 @@ export default class SZProto {
     /*
      * 看牌
      */
-    public static gameLookCardsNotify(cuopai) {
+    public static gameLookCardsNotify(cuopai?) {
         return {
             type: this.GAME_LOOK_NOTIFY,
             data: {

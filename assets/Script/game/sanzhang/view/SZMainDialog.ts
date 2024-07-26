@@ -60,8 +60,8 @@ export default class SZMainDialog extends cc.Component {
         }.bind(this), 0.2);
         //监听事件
         Gloab.MessageCallback.addListener("RoomMessagePush", this); //进入房间推送的消息
-		Gloab.MessageCallback.addListener('GameMessagePush', this);
-		Gloab.MessageCallback.addListener('ReConnectSuccess', this);
+        Gloab.MessageCallback.addListener('GameMessagePush', this);
+        Gloab.MessageCallback.addListener('ReConnectSuccess', this);
         Gloab.MessageCallback.addListener('GAME_EVENT', this);
         Gloab.MessageCallback.addListener('UpdateGameBg', this);
         //播放音乐
@@ -70,8 +70,8 @@ export default class SZMainDialog extends cc.Component {
 
     onDestroy(): void {
         Gloab.MessageCallback.removeListener("RoomMessagePush", this);
-		Gloab.MessageCallback.removeListener('GameMessagePush', this);
-		Gloab.MessageCallback.removeListener('ReConnectSuccess', this);
+        Gloab.MessageCallback.removeListener('GameMessagePush', this);
+        Gloab.MessageCallback.removeListener('ReConnectSuccess', this);
         Gloab.MessageCallback.removeListener('GAME_EVENT', this);
         Gloab.MessageCallback.removeListener('UpdateGameBg', this);
     }
@@ -486,6 +486,12 @@ export default class SZMainDialog extends cc.Component {
         Gloab.NetworkManager.notify(RoomMessageRouter, RoomProto.userReadyNotify(true));
     }
 
+    //看牌
+    onLookCards() {
+        if (!SZModel.getGameInited()) { return; }
+        Gloab.NetworkManager.notify(GameMessageRouter, SZProto.gameLookCardsNotify(null));
+        this.lookCardsButton.active = false;
+    }
     //========================================================================
 
 
