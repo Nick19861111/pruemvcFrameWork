@@ -29,7 +29,6 @@ export default class UserModel {
                 Gloab.MessageCallback.emitMessage("UpdateUserInfoUI");
                 break
         }
-
     }
 
     /**

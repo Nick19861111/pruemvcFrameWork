@@ -60,12 +60,20 @@ export default class SZMainDialog extends cc.Component {
         }.bind(this), 0.2);
         //监听事件
         Gloab.MessageCallback.addListener("RoomMessagePush", this); //进入房间推送的消息
+		Gloab.MessageCallback.addListener('GameMessagePush', this);
+		Gloab.MessageCallback.addListener('ReConnectSuccess', this);
+        Gloab.MessageCallback.addListener('GAME_EVENT', this);
+        Gloab.MessageCallback.addListener('UpdateGameBg', this);
         //播放音乐
         Gloab.SoundMgr.startPlayBgMusic("Game/Common/Audio/game_bg_2");
     }
 
     onDestroy(): void {
         Gloab.MessageCallback.removeListener("RoomMessagePush", this);
+		Gloab.MessageCallback.removeListener('GameMessagePush', this);
+		Gloab.MessageCallback.removeListener('ReConnectSuccess', this);
+        Gloab.MessageCallback.removeListener('GAME_EVENT', this);
+        Gloab.MessageCallback.removeListener('UpdateGameBg', this);
     }
 
 
@@ -87,6 +95,96 @@ export default class SZMainDialog extends cc.Component {
             else if (msg.type == RoomProto.USER_READY_PUSH) {
                 this.userReadyPush(msg.data.chairID);
             }
+        }
+        //游戏推送
+        else if (router === "GameMessagePush") {
+            if (msg.type === SZProto.GAME_BUREAU_PUSH) {
+                //局数
+                this.bureauLabel.string = '局数：' + SZModel.getCurBureau() + "/" + SZModel.getMaxBureau();
+            }
+            else if (msg.type === SZProto.GAME_ROUND_PUSH) {
+                //轮数
+                this.roundLabel.string = "轮数:" + SZModel.getCurRound() + "/" + SZModel.getMaxRound();
+            }
+            else if (msg.type === SZProto.GAME_STATUS_PUSH) {
+                //游戏状态
+                if (msg.data.gameStatus != SZProto.gameStatus.SHOW_CARDS) {
+                    this.lookCardsButton.active = false;
+                }
+                let user = SZModel.getUserByChairID(SZModel.getMyChairID());
+                if (SZModel.getGameStatus() == SZProto.gameStatus.NONE && !!user && (user.userStatus & RoomProto.userStatusEnum.READY) == 0 && SZModel.getMyChairID() < SZModel.getChairCount()) {
+                    if (SZModel.getGameStatus() == SZProto.gameStatus.NONE && !(user.userStatus & RoomProto.userStatusEnum.READY) && SZModel.getMyChairID() < SZModel.getChairCount() && SZModel.getCurBureau() < SZModel.getMaxBureau()) {
+                        this.readyButton.active = true;
+                    }
+                }
+                if (SZModel.getGameStatus() == SZProto.gameStatus.NONE) {
+                    this.roundLabel.string = '轮数：' + SZModel.getCurRound() + '/' + SZModel.getMaxRound();
+                }
+                cc.find('backhall', this.node).active = (SZModel.getCurBureau() == 0);
+            }
+            else if (msg.type === SZProto.GAME_LOOK_PUSH) {
+                //有看牌的推送
+                let user = SZModel.getUserByChairID(msg.data.chairID);
+                let audio = 'Game/Sanzhang/Audio/woman/view';
+                //根据我自己是男女判断房那个声音
+                if (user && user.userInfo.sex == 0) {
+                    audio = audio.replace(/woman/, "man");
+                }
+                Gloab.SoundMgr.playSound(audio);
+                //如果是我自己发的
+                if (msg.data.chairID == SZModel.getMyChairID()) {
+                    this.lookCardsButton.active = false;
+                    //搓牌的相关操作
+                    // if (msg.data.cuopai) {
+                    // 	let params = {
+                    // 		card: SZModel.getHandCardsByChairID(SZModel.getMyChairID())[2],
+                    // 		cb: () => { 
+                    // 			let cardLogic = this.getCardsNodeByChairID(SZModel.getMyChairID()).getComponent('SZCards');
+                    // 			cardLogic.sendCards();
+                    // 			cardLogic.showType(true);
+                    // 			cardLogic.updateStateSprite();
+                    // 		},
+                    // 	};
+                    // 	let node = cc.instantiate(this.cuopaiPrefab);
+                    // 	node.parent = cc.find('CuopaiNode', this.node);
+                    // 	node.y = 20;
+                    // 	node.getComponent('CuopaiNode').init(params.card, params.cb);
+                    // }
+                }
+            }
+            else if (msg.type === SZProto.GAME_END_PUSH) {
+                //游戏结束的相关操作
+                if (msg.data.result.length > 0) {
+                    msg.data.enterHall = this.enterHall.bind(this);
+                    Gloab.DialogManager.createDialog("Game/Sanzhang/SZResult", msg.data, function (dialog) {
+                        Gloab.DialogManager.removeLoadingCircle();
+                    })
+                }
+                else {
+                    this.enterHall();
+                }
+            }
+            else if (msg.type === SZProto.GAME_TURN_PUSH) {
+                //操作推送
+                if (msg.data.curChairID == SZModel.getMyChairID()) {
+                    let userStatus = SZModel.getUserStatusByChairID(SZModel.getMyChairID());
+                    if ((userStatus & SZProto.userStatus.LOOK) == 0) {
+                        let men = SZModel.getGameRule().gameFrameType;
+                        this.lookCardsButton.active = men < SZModel.getCurRound();
+                    }
+                }
+                else {
+                    // for (let node of cc.find('CuopaiNode', this.node).children) {
+                    //     node.destroy();
+                    // }
+                    this.lookCardsButton.active = false;
+                }
+            }
+
+            else if (router === 'ReConnectSuccess' || (router == 'GAME_EVENT' && msg == cc.game.EVENT_SHOW)) {
+                console.log("短线重连相关操作");
+            }
+
         }
     }
 

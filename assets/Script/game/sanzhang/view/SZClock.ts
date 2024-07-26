@@ -64,7 +64,6 @@ export default class SZClock extends cc.Component {
         }
         else {
             this.node.active = false;
-            /* this.unschedule(this.clock); */
         }
     }
 }

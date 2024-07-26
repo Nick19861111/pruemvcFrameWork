@@ -43,7 +43,8 @@ export default class SZProto {
         NONE: 0, /* 等待操作 */
         SEND_CARDS: 1, /* 发牌中 */
         POUR_SCORE: 2, /* 下分中 */
-        RESULT: 3, /* 显示结果 */
+        RESULT: 4, /* 显示结果 */
+        SHOW_CARDS: 3 /**显示牌 */
     };
 
     public static gameStatusTm = {
