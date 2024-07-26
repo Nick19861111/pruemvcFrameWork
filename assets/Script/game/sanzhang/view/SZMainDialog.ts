@@ -492,6 +492,19 @@ export default class SZMainDialog extends cc.Component {
         Gloab.NetworkManager.notify(GameMessageRouter, SZProto.gameLookCardsNotify(null));
         this.lookCardsButton.active = false;
     }
+
+    //copy按钮操作
+    onCopyRoomID() {
+        this.checkButton();
+        let str = '拼三张---房间号：' + SZModel.getRoomID() + ' ';
+        let rule = this.getRule();
+        for (let key in rule) {
+            str += key + rule[key] + ' ';
+        }
+        console.log(str);
+        //Global.PlatformHelper.copyText(str);
+    }
+
     //========================================================================
 
 
