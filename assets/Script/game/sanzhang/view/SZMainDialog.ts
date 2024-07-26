@@ -508,6 +508,19 @@ export default class SZMainDialog extends cc.Component {
     //========================================================================
 
 
+    /**
+     * 根据椅子id获得节点
+     * @param chairID 
+     */
+    getHeadNodeByChairID(chairID) {
+        for (let node of this.headNodeArray) {
+            if (node.getComponent('SZHead').getChairID() == chairID) {
+                return node;
+            }
+        }
+        return null;
+    }
+    
     private checkButton() {
         if (!SZModel.getGameInited()) { return; };
         Gloab.SoundMgr.playCommonSoundClickButton();
