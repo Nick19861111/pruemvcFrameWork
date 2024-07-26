@@ -183,8 +183,18 @@ export default class SZMainDialog extends cc.Component {
 
             else if (router === 'ReConnectSuccess' || (router == 'GAME_EVENT' && msg == cc.game.EVENT_SHOW)) {
                 console.log("短线重连相关操作");
+                if (Gloab.UserModel.isInRoom()) {
+                    Gloab.Api.hallApi.joinRoomRequest(SZModel.getRoomID()), function () {
+                        SZModel.setGameInited(false);
+                        RoomApi.roomMessageNotify(RoomProto.getRoomSceneInfoNotify());
+                    }, function () {
+                        this.enterHall();
+                    }
+                }
+                else{
+                    this.enterHall();
+                }
             }
-
         }
     }
 
@@ -520,7 +530,7 @@ export default class SZMainDialog extends cc.Component {
         }
         return null;
     }
-    
+
     private checkButton() {
         if (!SZModel.getGameInited()) { return; };
         Gloab.SoundMgr.playCommonSoundClickButton();

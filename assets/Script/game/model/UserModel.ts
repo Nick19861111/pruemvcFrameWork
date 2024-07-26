@@ -31,6 +31,10 @@ export default class UserModel {
         }
     }
 
+    isInRoom() {
+        return !!this.data['roomID'] && this.data['roomID'] > 0;
+    }
+
     /**
      * 用户相关的数据
      * @param Properties 
