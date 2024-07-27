@@ -33,12 +33,14 @@ export default class SZOperate extends cc.Component {
         Gloab.MessageCallback.addListener('RoomMessagePush', this);
         Gloab.MessageCallback.addListener('GameMessagePush', this);
         Gloab.MessageCallback.addListener('ReConnectSuccess', this);
+        Gloab.MessageCallback.addListener("DisCarads", this);
     }
 
     onDestroy(): void {
         Gloab.MessageCallback.removeListener('RoomMessagePush', this);
         Gloab.MessageCallback.removeListener('GameMessagePush', this);
         Gloab.MessageCallback.removeListener('ReConnectSuccess', this);
+        Gloab.MessageCallback.removeListener("DisCarads", this);
     }
 
     //游戏的初始化
@@ -73,6 +75,9 @@ export default class SZOperate extends cc.Component {
 
     messageCallbackHandler(router, msg) {
         if (!SZModel.getGameInited()) { return; }
+        if (router === "DisCarads") {
+            
+        }
         if (router === 'RoomMessagePush') {
             if (msg.type === RoomProto.GET_ROOM_SCENE_INFO_PUSH) {
                 this.gameInit();
@@ -168,10 +173,10 @@ export default class SZOperate extends cc.Component {
             let myScore = SZModel.getCurScoreByChairID(SZModel.getMyChairID());
             let lookCard = SZModel.getLookCardByChairID(SZModel.getMyChairID());
             let curScore = SZModel.getCurScore() * (lookCard ? 2 : 1);
-            /* if (myScore-curScore < 0) {
-                Global.DialogManager.addTipDialog('比牌金币不足,只能弃牌');
+            if (myScore - curScore < 0) {
+                Gloab.DialogManager.addTipDialog('比牌金币不足,只能弃牌');
                 return;
-            } */
+            }
         }
         Gloab.NetworkManager.notify(GameMessageRouter, SZProto.gameCompareNotify(chairID));
         this.node.active = false;
@@ -189,10 +194,10 @@ export default class SZOperate extends cc.Component {
             let myScore = SZModel.getCurScoreByChairID(SZModel.getMyChairID());
             let lookCard = SZModel.getLookCardByChairID(SZModel.getMyChairID());
             let curScore = SZModel.getCurScore() * (lookCard ? 2 : 1);
-            /* if (myScore-curScore < 0) {
-                Global.DialogManager.addTipDialog('下注不能超过自己拥有的金币');
+            if (myScore - curScore < 0) {
+                Gloab.DialogManager.addTipDialog('下注不能超过自己拥有的金币');
                 return;
-            } */
+            }
         }
         Gloab.NetworkManager.notify(GameMessageRouter, SZProto.gamePourScoreNotify(SZModel.getCurScore(), 1));
         this.node.active = false;

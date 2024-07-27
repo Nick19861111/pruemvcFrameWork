@@ -11,7 +11,7 @@ import SZModel from "../model/SZModel";
 import SZProto from "../SZProto";
 
 const { ccclass, property } = cc._decorator;
-
+const GameMessageRouter = 'game.gameHandler.gameMessageNotify';
 @ccclass
 export default class SZClock extends cc.Component {
 
@@ -64,6 +64,8 @@ export default class SZClock extends cc.Component {
         }
         else {
             this.node.active = false;
+            //如果一直没有动作就当放弃处理
+            Gloab.MessageCallback.emitMessage("DisCarads");
         }
     }
 }
