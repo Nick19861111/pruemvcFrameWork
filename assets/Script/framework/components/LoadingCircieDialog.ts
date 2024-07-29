@@ -15,48 +15,41 @@ const { ccclass, property } = cc._decorator;
 export default class LoadingCircieDialog extends cc.Component {
 
     @property(cc.Node)
-    Circle: cc.Node = null; //循环操作的节点
+    Circle: cc.Node = null; // Node for circular animation
 
     onLoad() {
-
     }
 
     /**
-     * 添加loading界面
-     * @param delay 
+     * Add loading interface
+     * @param delay - Delay in seconds before showing the loading circle
      */
-    addLoadingCircle(delay) {
+    addLoadingCircle(delay: number) {
         cc.log("显示loading")
 
-        this.unscheduleAllCallbacks();//停止所有的毁掉
-        if (!!delay) {
+        this.unscheduleAllCallbacks();//// Stop all scheduled callbacks
+        if (delay > 0) {
             this.node.active = true;
-            this.Circle.stopAllActions();//停止所有动作
+            this.Circle.stopAllActions();
             this.Circle.parent.active = false;
 
-            this.scheduleOnce(function () {
-
+            this.scheduleOnce(() => {
                 this.Circle.parent.active = true;
                 this.Circle.runAction(cc.repeatForever(cc.rotateBy(2, 360)));
-
-            }.bind(this), delay);
-        }
-        else {
-
+            }, delay);
+        } else {
             this.node.active = true;
             this.Circle.parent.active = true;
             this.Circle.stopAllActions();
             this.Circle.runAction(cc.repeatForever(cc.rotateBy(2, 360)));
-
         }
     }
 
     /**
-     * 删除loading界面
+     * Remove loading interface
      */
     removeLoadingCirle() {
-        cc.log("移除loading界面");
-
+        cc.log("Removing loading interface");
         this.unscheduleAllCallbacks();
         this.Circle.stopAllActions();
         this.node.active = false;

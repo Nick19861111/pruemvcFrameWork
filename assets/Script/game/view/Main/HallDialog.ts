@@ -88,9 +88,6 @@ export default class HallDialog extends cc.Component {
             this.maskNode.x = -200;
             this.maskNode.y = 300;
         }.bind(this))])))
-
-
-
     }
 
     protected onDestroy(): void {
